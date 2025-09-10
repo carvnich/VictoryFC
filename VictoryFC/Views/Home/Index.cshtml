@@ -1,353 +1,207 @@
-﻿@model VictoryFC.Models.HomeViewModel
+﻿@model VictoryFC.Models.DynamicHomeViewModel
 
 @{
-	ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home Page";
 }
 
 <div class="card border shadow">
-	<!-- Hero Section with Game Countdown -->
-	<div class="card-body bg-primary text-white position-relative overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1510526292299-20af3f62d453?q=80&w=2028&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); background-size: cover; background-position: center;">
-		<div class="position-absolute top-0 start-0 w-100 h-100 bg-dark" style="opacity: 0.5;"></div>
-		<div class="position-relative">
-			<div class="row align-items-center h-100">
-				<div class="col-lg-6">
-					<div class="text-center py-4">
-						<h1 class="mb-4 fw-bold">Victory FC vs Azzurri ST</h1>
-						<div class="d-flex justify-content-center align-items-start gap-2 mb-4" id="countdown">
-							<div class="text-center">
-								<div class="display-5 fw-bold" id="days">00</div>
-								<small>Days</small>
-							</div>
-							<div class="display-6 fw-bold">:</div>
-							<div class="text-center">
-								<div class="display-5 fw-bold" id="hours">00</div>
-								<small>Hours</small>
-							</div>
-							<div class="display-6 fw-bold">:</div>
-							<div class="text-center">
-								<div class="display-5 fw-bold" id="minutes">00</div>
-								<small>Minutes</small>
-							</div>
-							<div class="display-6 fw-bold">:</div>
-							<div class="text-center">
-								<div class="display-5 fw-bold" id="seconds">00</div>
-								<small>Seconds</small>
-							</div>
-						</div>
-						<div class="mb-3">
-							<p class="mb-2 fs-5"><i class="bi bi-calendar me-2"></i>Saturday, September 14, 2025 at 11:00 AM</p>
-							<p class="mb-2"><i class="bi bi-geo-alt me-2"></i>Heritage Green Sports Park, 355 First Rd W, Stoney Creek</p>
-							<p class="mb-0"><i class="bi bi-pin-map me-2"></i>Field 5</p>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-6">
-					<div class="p-4">
-						<div class="bg-white rounded shadow-sm p-2">
-							<div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 300px;">
-								<div class="text-muted text-center">
-									<i class="bi bi-map display-3"></i>
-									<p class="mt-3 mb-0">Stadium Location Map</p>
-									<small class="text-muted">Heritage Green Sports Park</small>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <!-- Hero Section with Game Countdown -->
+    <div class="card-body bg-primary text-white position-relative overflow-hidden team-form-@Model.TeamFormClass" style="background-image: url('https://images.unsplash.com/photo-1510526292299-20af3f62d453?q=80&w=2028&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); background-size: cover; background-position: center;">
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark" style="opacity: 0.5;"></div>
+        <div class="position-relative">
+            <div class="row align-items-center h-100">
+                <div class="col-lg-6">
+                    <div class="text-center py-4">
+                        @if (Model.NextGame != null)
+                        {
+                            <h1 class="mb-4 fw-bold">@Model.NextGame.HomeTeam vs @Model.NextGame.AwayTeam</h1>
+                            <div class="d-flex justify-content-center align-items-start gap-2 mb-4" id="countdown" data-target="@Model.NextGameCountdownTarget">
+                                <div class="text-center"><div class="display-5 fw-bold" id="days">00</div><small>Days</small></div>
+                                <div class="display-6 fw-bold">:</div>
+                                <div class="text-center"><div class="display-5 fw-bold" id="hours">00</div><small>Hours</small></div>
+                                <div class="display-6 fw-bold">:</div>
+                                <div class="text-center"><div class="display-5 fw-bold" id="minutes">00</div><small>Minutes</small></div>
+                                <div class="display-6 fw-bold">:</div>
+                                <div class="text-center"><div class="display-5 fw-bold" id="seconds">00</div><small>Seconds</small></div>
+                            </div>
+                            <div class="mb-3">
+                                <p class="mb-2 fs-5"><i class="bi bi-calendar me-2"></i>@Model.NextGame.FormattedDate at @Model.NextGame.FormattedTime</p>
+                                <p class="mb-2"><i class="bi bi-geo-alt me-2"></i>@Model.NextGame.Field</p>
+                                <p class="mb-0"><small>@Model.NextGameLocation</small></p>
+                            </div>
+                        }
+                        else
+                        {
+                            <h1 class="mb-4 fw-bold">Season Complete!</h1>
+                            <p class="fs-4">Thank you for your support this season!</p>
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="p-4">
+                        @if (Model.NextGame != null)
+                        {
+                            <div class="bg-white rounded shadow-sm p-2">
+                                <div id="map" class="rounded" style="height: 300px; width: 100%;" data-location="@Model.NextGameLocation" data-field="@Model.NextGame.Field"></div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="bg-white rounded shadow-sm p-3">
+                                <h5 class="text-dark mb-3"><i class="bi bi-trophy me-2"></i>Season Stats</h5>
+                                <div class="row text-center text-dark">
+                                    <div class="col-3"><div class="fw-bold fs-4 text-success">@Model.SeasonStats.Wins</div><small>Wins</small></div>
+                                    <div class="col-3"><div class="fw-bold fs-4 text-warning">@Model.SeasonStats.Draws</div><small>Draws</small></div>
+                                    <div class="col-3"><div class="fw-bold fs-4 text-danger">@Model.SeasonStats.Losses</div><small>Losses</small></div>
+                                    <div class="col-3"><div class="fw-bold fs-4 text-primary">@Model.SeasonStats.Points</div><small>Points</small></div>
+                                </div>
+                                <div class="mt-3 text-center text-dark">
+                                    <div class="fw-bold">@Model.SeasonStats.GoalsFor - @Model.SeasonStats.GoalsAgainst</div>
+                                    <small>Goals For - Goals Against</small>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<hr class="mx-auto rounded" style="width: 90%; height: 4px; background-color: #e9ecef; opacity: 1; border: none;">
+    <hr class="mx-auto rounded" style="width: 90%; height: 4px; background-color: #e9ecef; opacity: 1; border: none;">
 
-	<!-- News Section -->
-	<div class="card-body">
-		<h3 class="card-title mb-3">
-			<i class="bi bi-newspaper me-2"></i>News
-		</h3>
-		<ul class="nav nav-pills mb-3" role="tablist">
-			<li class="nav-item">
-				<button class="nav-link text-black active" data-bs-toggle="pill" data-bs-target="#all-news">
-					<i class="bi bi-list-ul me-1"></i>All News
-				</button>
-			</li>
-			<li class="nav-item">
-				<button class="nav-link text-black" data-bs-toggle="pill" data-bs-target="#hot-news">
-					<i class="bi bi-fire me-1"></i>Hot News
-				</button>
-			</li>
-			<li class="nav-item">
-				<button class="nav-link text-black" data-bs-toggle="pill" data-bs-target="#match-reports">
-					<i class="bi bi-clipboard-data me-1"></i>Match Reports
-				</button>
-			</li>
-			<li class="nav-item">
-				<button class="nav-link text-black" data-bs-toggle="pill" data-bs-target="#club-news">
-					<i class="bi bi-building me-1"></i>Club News
-				</button>
-			</li>
-		</ul>
-		<div class="tab-content">
-			<div class="tab-pane fade show active" id="all-news">
-				<div class="row g-3">
-					<div class="col-md-6">
-						<a href="/News/Details/1" class="text-decoration-none">
-							<div class="card h-100 border shadow-sm news-card">
-								<div class="card-body">
-									<span class="badge bg-primary mb-2">
-										<i class="bi bi-clipboard-check me-1"></i>Match Report
-									</span>
-									<h6 class="card-title text-dark">Victory FC Secures 3-1 Win Over Phoenix United</h6>
-									<p class="card-text text-muted small">Outstanding performance by the team in last night's crucial match...</p>
-									<div class="d-flex justify-content-between align-items-center">
-										<small class="text-muted">
-											<i class="bi bi-clock me-1"></i>2 hours ago
-										</small>
-										<i class="bi bi-arrow-right-circle text-primary"></i>
-									</div>
-								</div>
-							</div>
-						</a>
-					</div>
-					<div class="col-md-6">
-						<a href="/News/Details/2" class="text-decoration-none">
-							<div class="card h-100 border shadow-sm news-card">
-								<div class="card-body">
-									<span class="badge bg-warning text-dark mb-2">
-										<i class="bi bi-fire me-1"></i>Hot News
-									</span>
-									<h6 class="card-title text-dark">New Signing: Welcome Marcus Johnson</h6>
-									<p class="card-text text-muted small">We're excited to welcome our newest midfielder to the Victory FC family...</p>
-									<div class="d-flex justify-content-between align-items-center">
-										<small class="text-muted">
-											<i class="bi bi-clock me-1"></i>5 hours ago
-										</small>
-										<i class="bi bi-arrow-right-circle text-primary"></i>
-									</div>
-								</div>
-							</div>
-						</a>
-					</div>
-					<div class="col-md-6">
-						<a href="/News/Details/3" class="text-decoration-none">
-							<div class="card h-100 border shadow-sm news-card">
-								<div class="card-body">
-									<span class="badge bg-secondary mb-2">
-										<i class="bi bi-building me-1"></i>Club News
-									</span>
-									<h6 class="card-title text-dark">Annual Club BBQ - Save the Date</h6>
-									<p class="card-text text-muted small">Join us for our annual club BBQ and awards ceremony on March 15th...</p>
-									<div class="d-flex justify-content-between align-items-center">
-										<small class="text-muted">
-											<i class="bi bi-clock me-1"></i>1 day ago
-										</small>
-										<i class="bi bi-arrow-right-circle text-primary"></i>
-									</div>
-								</div>
-							</div>
-						</a>
-					</div>
-					<div class="col-md-6">
-						<a href="/News/Details/4" class="text-decoration-none">
-							<div class="card h-100 border shadow-sm news-card">
-								<div class="card-body">
-									<span class="badge bg-info mb-2">
-										<i class="bi bi-people me-1"></i>Training
-									</span>
-									<h6 class="card-title text-dark">Training Schedule Updates</h6>
-									<p class="card-text text-muted small">Important changes to this week's training sessions due to field maintenance...</p>
-									<div class="d-flex justify-content-between align-items-center">
-										<small class="text-muted">
-											<i class="bi bi-clock me-1"></i>2 days ago
-										</small>
-										<i class="bi bi-arrow-right-circle text-primary"></i>
-									</div>
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-			</div>
-			<div class="tab-pane fade" id="hot-news">
-				<div class="row g-3">
-					<div class="col-md-6">
-						<a href="/News/Details/5" class="text-decoration-none">
-							<div class="card h-100 border-warning shadow-sm news-card">
-								<div class="card-body">
-									<span class="badge bg-warning text-dark mb-2">
-										<i class="bi bi-exclamation-triangle me-1"></i>Breaking
-									</span>
-									<h6 class="card-title text-dark">Championship Title Race Heats Up</h6>
-									<p class="card-text text-muted small">With only 4 matches remaining, Victory FC leads by just 3 points...</p>
-									<div class="d-flex justify-content-between align-items-center">
-										<small class="text-muted">
-											<i class="bi bi-clock me-1"></i>30 minutes ago
-										</small>
-										<i class="bi bi-arrow-right-circle text-primary"></i>
-									</div>
-								</div>
-							</div>
-						</a>
-					</div>
-					<div class="col-md-6">
-						<a href="/News/Details/6" class="text-decoration-none">
-							<div class="card h-100 border-danger shadow-sm news-card">
-								<div class="card-body">
-									<span class="badge bg-danger mb-2">
-										<i class="bi bi-exclamation-circle me-1"></i>Urgent
-									</span>
-									<h6 class="card-title text-dark">Weather Alert: Sunday's Match Status</h6>
-									<p class="card-text text-muted small">Due to severe weather warnings, Sunday's home match may be postponed...</p>
-									<div class="d-flex justify-content-between align-items-center">
-										<small class="text-muted">
-											<i class="bi bi-clock me-1"></i>2 hours ago
-										</small>
-										<i class="bi bi-arrow-right-circle text-primary"></i>
-									</div>
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-			</div>
-			<div class="tab-pane fade" id="match-reports">
-				<div class="row g-3">
-					<div class="col-12">
-						<a href="/News/Details/1" class="text-decoration-none">
-							<div class="card border shadow-sm news-card">
-								<div class="card-body">
-									<span class="badge bg-success mb-2">
-										<i class="bi bi-trophy me-1"></i>Victory
-									</span>
-									<h6 class="card-title text-dark">Victory FC 3-1 Phoenix United - Match Report</h6>
-									<p class="card-text text-muted">A dominant display from Victory FC as they secured a crucial 3-1 victory...</p>
-									<div class="d-flex justify-content-between align-items-center">
-										<small class="text-muted">
-											<i class="bi bi-clock me-1"></i>2 hours ago
-										</small>
-										<i class="bi bi-arrow-right-circle text-primary"></i>
-									</div>
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-			</div>
-			<div class="tab-pane fade" id="club-news">
-				<div class="row g-3">
-					<div class="col-md-6">
-						<a href="/News/Details/7" class="text-decoration-none">
-							<div class="card h-100 border shadow-sm news-card">
-								<div class="card-body">
-									<span class="badge bg-secondary mb-2">
-										<i class="bi bi-megaphone me-1"></i>Announcement
-									</span>
-									<h6 class="card-title text-dark">New Club Facilities Opening</h6>
-									<p class="card-text text-muted small">We're excited to announce the opening of our new training facilities...</p>
-									<div class="d-flex justify-content-between align-items-center">
-										<small class="text-muted">
-											<i class="bi bi-clock me-1"></i>3 days ago
-										</small>
-										<i class="bi bi-arrow-right-circle text-primary"></i>
-									</div>
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <!-- News Section -->
+    <div class="card-body">
+        <h3 class="card-title mb-3"><i class="bi bi-newspaper me-2"></i>News</h3>
+        <ul class="nav nav-pills mb-3" role="tablist">
+            <li class="nav-item"><button class="nav-link text-black active" data-bs-toggle="pill" data-bs-target="#all-news"><i class="bi bi-list-ul me-1"></i>All News</button></li>
+            <li class="nav-item"><button class="nav-link text-black" data-bs-toggle="pill" data-bs-target="#hot-news"><i class="bi bi-fire me-1"></i>Hot News</button></li>
+            <li class="nav-item"><button class="nav-link text-black" data-bs-toggle="pill" data-bs-target="#match-reports"><i class="bi bi-clipboard-data me-1"></i>Match Reports</button></li>
+            <li class="nav-item"><button class="nav-link text-black" data-bs-toggle="pill" data-bs-target="#club-news"><i class="bi bi-building me-1"></i>Club News</button></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="all-news">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <a href="/News/Details/1" class="text-decoration-none">
+                            <div class="card h-100 border shadow-sm news-card">
+                                <div class="card-body">
+                                    <span class="badge bg-primary mb-2"><i class="bi bi-clipboard-check me-1"></i>Match Report</span>
+                                    <h6 class="card-title text-dark">Victory FC Secures 3-1 Win Over Phoenix United</h6>
+                                    <p class="card-text text-muted small">Outstanding performance by the team in last night's crucial match...</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted"><i class="bi bi-clock me-1"></i>2 hours ago</small>
+                                        <i class="bi bi-arrow-right-circle text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/News/Details/2" class="text-decoration-none">
+                            <div class="card h-100 border shadow-sm news-card">
+                                <div class="card-body">
+                                    <span class="badge bg-warning text-dark mb-2"><i class="bi bi-fire me-1"></i>Hot News</span>
+                                    <h6 class="card-title text-dark">New Signing: Welcome Marcus Johnson</h6>
+                                    <p class="card-text text-muted small">We're excited to welcome our newest midfielder to the Victory FC family...</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted"><i class="bi bi-clock me-1"></i>5 hours ago</small>
+                                        <i class="bi bi-arrow-right-circle text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="hot-news"><div class="alert alert-info">No hot news at this time.</div></div>
+            <div class="tab-pane fade" id="match-reports"><div class="alert alert-info">Recent match reports will appear here.</div></div>
+            <div class="tab-pane fade" id="club-news"><div class="alert alert-info">Club announcements will appear here.</div></div>
+        </div>
+    </div>
 
-	<hr class="mx-auto rounded" style="width: 90%; height: 4px; background-color: #e9ecef; opacity: 1; border: none;">
+    <hr class="mx-auto rounded" style="width: 90%; height: 4px; background-color: #e9ecef; opacity: 1; border: none;">
 
-	<!-- Club Shop Section -->
-	<div class="card-body">
-		<h3 class="card-title mb-4">
-			<i class="bi bi-bag-fill me-2"></i>Shop
-		</h3>
-		<div class="row g-3">
-			@for (int i = 0; i < 6 && i < Model.ShopItems.Count; i++)
-			{
-				var item = Model.ShopItems[i];
-				<div class="col-lg-2 col-md-4 col-6">
-					<a href="@item.Url" target="_blank" class="text-decoration-none">
-						<div class="card border shadow-sm h-100">
-							<div class="d-flex align-items-center justify-content-center bg-light" style="height:120px;">
-								<i class="bi @item.IconClass display-6 text-muted"></i>
-							</div>
-							<div class="card-body text-center p-2">
-								<h6 class="card-title mb-1 small">@item.Name</h6>
-								<p class="text-muted small mb-1" style="font-size: 0.75rem;">@item.Description</p>
-								<p class="fw-bold text-primary mb-0 small">@item.Price</p>
-							</div>
-						</div>
-					</a>
-				</div>
-			}
-		</div>
-	</div>
+    <!-- Shop Section -->
+    <div class="card-body">
+        <h3 class="card-title mb-4"><i class="bi bi-bag-fill me-2"></i>Shop</h3>
+        <div class="row g-3">
+            @for (int i = 0; i < 6 && i < Model.ShopItems.Count; i++)
+            {
+                var item = Model.ShopItems[i];
+                <div class="col-lg-2 col-md-4 col-6">
+                    <a href="@item.Url" target="_blank" class="text-decoration-none">
+                        <div class="card border shadow-sm h-100">
+                            <div class="d-flex align-items-center justify-content-center bg-light" style="height:120px;">
+                                <i class="bi @item.IconClass display-6 text-muted"></i>
+                            </div>
+                            <div class="card-body text-center p-2">
+                                <h6 class="card-title mb-1 small">@item.Name</h6>
+                                <p class="text-muted small mb-1" style="font-size: 0.75rem;">@item.Description</p>
+                                <p class="fw-bold text-primary mb-0 small">@item.Price</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
 
-	<hr class="mx-auto rounded" style="width: 90%; height: 4px; background-color: #e9ecef; opacity: 1; border: none;">
+    <hr class="mx-auto rounded" style="width: 90%; height: 4px; background-color: #e9ecef; opacity: 1; border: none;">
 
-	<!-- Standings Section -->
-	<div class="card-body">
-		<div class="row align-items-center mb-3">
-			<div class="col">
-				<h3 class="card-title mb-0">
-					<i class="bi bi-table me-2"></i>Standings
-				</h3>
-			</div>
-			<div class="col-auto">
-				<select class="form-select">
-					<option selected>Division 3</option>
-					<option>Spence Cup</option>
-					@* <option>League One Division</option> *@
-					@* <option>Masters Division (40+)</option> *@
-				</select>
-			</div>
-		</div>
-		<div class="table-responsive">
-			<table class="table mb-0">
-				<thead>
-					<tr>
-						<th class="border-0 bg-white">Club</th>
-						<th class="border-0 bg-white text-center">GP</th>
-						<th class="border-0 bg-white text-center">W</th>
-						<th class="border-0 bg-white text-center">D</th>
-						<th class="border-0 bg-white text-center">L</th>
-						<th class="border-0 bg-white text-center d-none d-md-table-cell">GF</th>
-						<th class="border-0 bg-white text-center d-none d-md-table-cell">GA</th>
-						<th class="border-0 bg-white text-center">+/-</th>
-						<th class="border-0 bg-white text-center">Pts</th>
-						<th class="border-0 bg-white text-center">Last 5</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach (var team in Model.Standings)
-					{
-						<tr class="bg-light rounded">
-							<td class="text-dark border-0">@team.Position &nbsp;&nbsp; @team.Team</td>
-							<td class="text-center text-dark border-0">@team.P</td>
-							<td class="text-center text-dark border-0">@team.W</td>
-							<td class="text-center text-dark border-0">@team.D</td>
-							<td class="text-center text-dark border-0">@team.L</td>
-							<td class="text-center text-dark border-0 d-none d-md-table-cell">@team.GF</td>
-							<td class="text-center text-dark border-0 d-none d-md-table-cell">@team.GA</td>
-							<td class="text-center text-dark border-0">@(team.GD >= 0 ? "+" : "")@team.GD</td>
-							<td class="text-center text-dark border-0">@team.Pts</td>
-							<td class="text-center border-0">
-								@foreach (var match in team.LastFiveMatches)
-								{
-									<span class="d-inline-flex align-items-center justify-content-center rounded-circle me-1 match-result" style="width:20px;height:20px;background:@(match.IsWin ? "#24a700" : match.IsDraw ? "#6c757d" : "#ff0000")" data-bs-toggle="tooltip" title="@match.Opponent">
-										<i class="bi @(match.IsWin ? "bi-check" : match.IsDraw ? "bi-dash" : "bi-x") text-white" style="display: flex; font-size:14px"></i>
-									</span>
-								}
-							</td>
-						</tr>
-					}
-				</tbody>
-			</table>
-		</div>
-	</div>
+    <!-- Dynamic Standings Section -->
+    <div class="card-body">
+        <div class="row align-items-center mb-3">
+            <div class="col">
+                <h3 class="card-title mb-0"><i class="bi bi-table me-2"></i>Standings</h3>
+            </div>
+            <div class="col-auto">
+                <select class="form-select me-2" id="division-select">
+                    <option value="regular" selected>Division 3</option>
+                    <option value="spence">Spence Cup</option>
+                </select>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table mb-0" id="standings-table">
+                <thead>
+                    <tr>
+                        <th class="border-0 bg-white">Club</th>
+                        <th class="border-0 bg-white text-center">GP</th>
+                        <th class="border-0 bg-white text-center">W</th>
+                        <th class="border-0 bg-white text-center">D</th>
+                        <th class="border-0 bg-white text-center">L</th>
+                        <th class="border-0 bg-white text-center d-none d-md-table-cell">GF</th>
+                        <th class="border-0 bg-white text-center d-none d-md-table-cell">GA</th>
+                        <th class="border-0 bg-white text-center">+/-</th>
+                        <th class="border-0 bg-white text-center">Pts</th>
+                        <th class="border-0 bg-white text-center">Last 5</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var team in Model.Standings)
+                    {
+                        <tr class="rounded" data-team="@team.Team">
+                            <td class="text-dark border-0">@team.Position &nbsp;&nbsp; @team.Team</td>
+                            <td class="text-center text-dark border-0">@team.P</td>
+                            <td class="text-center text-dark border-0">@team.W</td>
+                            <td class="text-center text-dark border-0">@team.D</td>
+                            <td class="text-center text-dark border-0">@team.L</td>
+                            <td class="text-center text-dark border-0 d-none d-md-table-cell">@team.GF</td>
+                            <td class="text-center text-dark border-0 d-none d-md-table-cell">@team.GA</td>
+                            <td class="text-center text-dark border-0">@(team.GD >= 0 ? "+" : "")@team.GD</td>
+                            <td class="text-center text-dark border-0">@team.Pts</td>
+                            <td class="text-center border-0">
+                                @foreach (var match in team.LastFiveMatches)
+                                {
+                                    <span class="d-inline-flex align-items-center justify-content-center rounded-circle me-1 match-result" style="width:20px;height:20px;background:@(match.IsWin ? "#24a700" : match.IsDraw ? "#6c757d" : "#ff0000")" data-bs-toggle="tooltip" title="@match.Opponent">
+                                        <i class="bi @(match.IsWin ? "bi-check" : match.IsDraw ? "bi-dash" : "bi-x") text-white" style="display: flex; font-size:18px"></i>
+                                    </span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

@@ -24,3 +24,30 @@ body {
     transform: scale(1.1);
     transition: transform 0.1s;
 }
+
+/* Leaflet map styling - CRITICAL for map display */
+#map {
+    height: 300px;
+    width: 100%;
+    z-index: 1;
+}
+
+/* Custom Leaflet map marker */
+.custom-map-marker {
+    background: none !important;
+    border: none !important;
+    text-align: center;
+}
+
+    .custom-map-marker i {
+        filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+    }
+
+/* Leaflet popup styling */
+.leaflet-popup-content-wrapper {
+    border-radius: 8px;
+}
+
+.leaflet-popup-content {
+    font-family: 'Poppins', sans-serif;
+}
