@@ -1,31 +1,26 @@
 html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+/* Purple underline for active nav pills */
+.nav-pills .nav-link.active {
+    background: none !important;
+    border-bottom: 3px solid #a259ff !important;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+.nav-pills .nav-link {
+    background: none !important;
+    border-radius: 0 !important;
+    border-bottom: 2px solid transparent !important;
+}
+
+/* Match result hover effect */
+.match-result:hover {
+    transform: scale(1.1);
+    transition: transform 0.1s;
 }
