@@ -10,7 +10,7 @@ body {
 /* Purple underline for active nav pills */
 .nav-pills .nav-link.active {
     background: none !important;
-    border-bottom: 3px solid #a259ff !important;
+    border-bottom: 3px solid #ff0000 !important;
 }
 
 .nav-pills .nav-link {
@@ -27,11 +27,11 @@ body {
 
 /* Competition-based backgrounds */
 .match-row.regular-season {
-    background-color: rgb(32, 121, 18, 0.05);
+    background-color: rgb(0, 0, 0, 0.05);
 }
 
 .match-row.spence-cup {
-    background-color: rgb(35, 198, 209, 0.05);
+    background-color: rgb(255, 0, 0, 0.05);
 }
 
 /* Leaflet map styling - CRITICAL for map display */
