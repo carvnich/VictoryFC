@@ -101,7 +101,7 @@
                                     }
                                     else
                                     {
-                                        <div class="badge bg-primary mb-1">vs</div>
+                                        <div class="fw-bold">vs</div>
                                         <div class="small text-muted">
                                             <div>@match.FormattedTime</div>
                                             <div>@match.Field</div>
@@ -146,7 +146,7 @@
                                     }
                                     else
                                     {
-                                        <div class="badge bg-primary mb-1">vs</div>
+                                        <div class="fw-bold">vs</div>
                                         <div class="small text-muted">
                                             <div>@match.FormattedTime</div>
                                             <div>@match.Field</div>
@@ -172,7 +172,7 @@
                         <h5 class="text-muted mb-3 border-bottom pb-2">@dateGroup.Key.ToString("dddd, MMMM dd, yyyy")</h5>
                         @foreach (var match in dateGroup.OrderBy(m => m.GameDate))
                         {
-                            <div class="row align-items-center py-2 rounded match-row @match.CompetitionClass">
+                            <div class="row align-items-center p-2 m-2 rounded match-row @match.CompetitionClass">
                                 <div class="col-5 col-md-4 text-end">
                                     <span class="fw-bold @((match.HomeTeam == "Victory FC") ? "text-danger" : "")">@match.HomeTeam</span>
                                 </div>
@@ -191,7 +191,7 @@
                                     }
                                     else
                                     {
-                                        <div class="badge bg-primary mb-1">vs</div>
+                                        <div class="fw-bold">vs</div>
                                         <div class="small text-muted">
                                             <div>@match.FormattedTime</div>
                                             <div>@match.Field</div>
