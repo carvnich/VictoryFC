@@ -13,20 +13,16 @@ function initMap() {
     if (!gameLocation) return;
 
     try {
-        // Get coordinates for the location
         const coordinates = getLocationCoordinates(gameLocation);
 
         if (coordinates) {
-            // Initialize Leaflet map
             map = L.map('map').setView([coordinates.lat, coordinates.lng], 15);
 
-            // Add OpenStreetMap tiles
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             }).addTo(map);
 
-            // Add custom marker
             const customIcon = L.divIcon({
                 className: 'custom-map-marker',
                 html: '<i class="bi bi-geo-alt-fill text-danger" style="font-size: 2rem;"></i>',
@@ -34,13 +30,11 @@ function initMap() {
                 iconAnchor: [15, 30]
             });
 
-            // Add marker to map
             L.marker([coordinates.lat, coordinates.lng], { icon: customIcon })
                 .addTo(map)
                 .bindPopup(`<b>${fieldName}</b><br>${gameLocation}`)
                 .openPopup();
         } else {
-            // Fallback to placeholder
             showMapFallback(mapElement, fieldName);
         }
     } catch (error) {
@@ -52,15 +46,14 @@ function initMap() {
 // Get coordinates for known locations
 function getLocationCoordinates(location) {
     const locationMap = {
-        "355 First Rd W, Stoney Creek, ON L8E 0G5": { lat: 43.2081, lng: -79.7381 }, // Heritage Green
-        "135 Fennell Ave W, Hamilton, ON L9C 1E9": { lat: 43.2501, lng: -79.9181 }, // Mohawk Sports Park
-        "1145 Stone Church Rd E, Hamilton, ON L8W 3J6": { lat: 43.2067, lng: -79.7789 }, // Hamilton Italian Centre
-        "1500 Shaver Rd, Ancaster, ON L9G 3K9": { lat: 43.2189, lng: -79.9892 }, // Shady Acres
-        "363 Wilson St E, Ancaster, ON L9G 2B8": { lat: 43.2167, lng: -79.9667 }, // Ancaster
-        "65 Herkimer St, Hamilton, ON L8P 2G5": { lat: 43.2557, lng: -79.8711 }, // Proto Field
-        "316 Sackville Hill Lane, Lower Sackville, NS B4C 2R9": { lat: 44.7761, lng: -63.6739 } // Sackville
+        "355 First Rd W, Stoney Creek, ON L8E 0G5": { lat: 43.2081, lng: -79.7381 },
+        "135 Fennell Ave W, Hamilton, ON L9C 1E9": { lat: 43.2501, lng: -79.9181 },
+        "1145 Stone Church Rd E, Hamilton, ON L8W 3J6": { lat: 43.2067, lng: -79.7789 },
+        "1500 Shaver Rd, Ancaster, ON L9G 3K9": { lat: 43.2189, lng: -79.9892 },
+        "363 Wilson St E, Ancaster, ON L9G 2B8": { lat: 43.2167, lng: -79.9667 },
+        "65 Herkimer St, Hamilton, ON L8P 2G5": { lat: 43.2557, lng: -79.8711 },
+        "316 Sackville Hill Lane, Lower Sackville, NS B4C 2R9": { lat: 44.7761, lng: -63.6739 }
     };
-
     return locationMap[location] || null;
 }
 
@@ -125,6 +118,120 @@ async function switchDivision() {
     }
 }
 
+// Competition switching functionality
+async function switchCompetition() {
+    const competitionSelect = document.getElementById('competition-select');
+    if (!competitionSelect) return;
+
+    const competition = competitionSelect.value;
+    try {
+        const response = await fetch(`/Matches/GetMatches?competition=${competition}`);
+        const data = await response.json();
+        updateMatchesDisplay(data.matches);
+        showNotification('Matches updated successfully!', 'success');
+    } catch (error) {
+        console.error('Error switching competition:', error);
+        showNotification('Failed to load competition data', 'error');
+    }
+}
+
+// Update matches display
+function updateMatchesDisplay(matches) {
+    const generateMatchesHTML = (filteredMatches) => {
+        const groupedMatches = filteredMatches.reduce((groups, match) => {
+            const date = new Date(match.gameDate).toDateString();
+            if (!groups[date]) groups[date] = [];
+            groups[date].push(match);
+            return groups;
+        }, {});
+
+        return Object.keys(groupedMatches)
+            .sort((a, b) => new Date(b) - new Date(a))
+            .map(date => {
+                const dateFormatted = new Date(date).toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                const matchesHTML = groupedMatches[date]
+                    .sort((a, b) => new Date(a.gameDate) - new Date(b.gameDate))
+                    .map(match => {
+                        const gameTime = new Date(match.gameDate).toLocaleTimeString('en-US', {
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true
+                        });
+
+                        return `
+                            <div class="row align-items-center p-2 m-2 rounded match-row ${match.competition === 'spence' ? 'spence-cup' : 'regular-season'}">
+                                <div class="col-5 col-md-4 text-end">
+                                    <span class="fw-bold ${match.homeTeam === 'Victory FC' ? 'text-danger' : ''}">${match.homeTeam}</span>
+                                </div>
+                                <div class="col-2 col-md-4 text-center">
+                                    ${match.isCompleted ? `
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <span class="fs-4 fw-bold me-2">${match.homeScore}</span>
+                                            <span class="text-muted">-</span>
+                                            <span class="fs-4 fw-bold ms-2">${match.awayScore}</span>
+                                        </div>
+                                        <div class="small text-muted">
+                                            <div>${gameTime}</div>
+                                            <div>${match.field}</div>
+                                        </div>
+                                    ` : `
+                                        <div class="fw-bold">vs</div>
+                                        <div class="small text-muted">
+                                            <div>${gameTime}</div>
+                                            <div>${match.field}</div>
+                                        </div>
+                                    `}
+                                </div>
+                                <div class="col-5 col-md-4">
+                                    <span class="fw-bold ${match.awayTeam === 'Victory FC' ? 'text-danger' : ''}">${match.awayTeam}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                return `
+                    <div class="mb-4">
+                        <h5 class="text-muted mb-3 border-bottom pb-2">${dateFormatted}</h5>
+                        ${matchesHTML}
+                    </div>
+                `;
+            }).join('');
+    };
+
+    // Update all tabs
+    const allMatchesTab = document.getElementById('all-matches');
+    const victoryMatchesTab = document.getElementById('victory-matches');
+    const unitedMatchesTab = document.getElementById('united-matches');
+    const protoMatchesTab = document.getElementById('proto-matches');
+
+    if (allMatchesTab) {
+        allMatchesTab.innerHTML = generateMatchesHTML(matches);
+    }
+
+    if (victoryMatchesTab) {
+        const victoryMatches = matches.filter(m => m.homeTeam === 'Victory FC' || m.awayTeam === 'Victory FC');
+        victoryMatchesTab.innerHTML = generateMatchesHTML(victoryMatches);
+    }
+
+    if (unitedMatchesTab) {
+        const unitedMatches = matches.filter(m =>
+            m.homeTeam.includes('United') || m.awayTeam.includes('United'));
+        unitedMatchesTab.innerHTML = generateMatchesHTML(unitedMatches);
+    }
+
+    if (protoMatchesTab) {
+        const protoMatches = matches.filter(m =>
+            m.homeTeam.includes('Proto') || m.awayTeam.includes('Proto'));
+        protoMatchesTab.innerHTML = generateMatchesHTML(protoMatches);
+    }
+}
+
 // Refresh standings functionality
 async function refreshStandings() {
     const divisionSelect = document.getElementById('division-select');
@@ -150,9 +257,7 @@ function updateStandingsTable(standings) {
     tbody.innerHTML = '';
 
     standings.forEach((team, index) => {
-        //const rowClass = team.team === 'VICTORY FC' ? 'table-primary' : 'bg-light';
         const row = document.createElement('tr');
-        //row.className = `${rowClass} rounded`;
         row.setAttribute('data-team', team.team);
 
         row.innerHTML = `
@@ -220,27 +325,34 @@ function updateLastUpdateTime() {
 function initializeTooltips() {
     const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     tooltips.forEach(tooltip => {
-        // Dispose existing tooltip if it exists
         const existingTooltip = bootstrap.Tooltip.getInstance(tooltip);
         if (existingTooltip) {
             existingTooltip.dispose();
         }
-        // Create new tooltip
         new bootstrap.Tooltip(tooltip);
+    });
+}
+
+// Matches filtering functionality
+function initializeMatchesFiltering() {
+    const pillButtons = document.querySelectorAll('.nav-pills .nav-link');
+
+    pillButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            pillButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+        });
     });
 }
 
 // Event listeners and initialization
 document.addEventListener('DOMContentLoaded', function () {
-    // Initialize map if element exists
     const mapElement = document.getElementById('map');
     if (mapElement) {
-        // Wait a bit for Leaflet to fully load
         setTimeout(() => {
             if (typeof L !== 'undefined') {
                 initMap();
             } else {
-                // Wait for Leaflet to load
                 const checkLeaflet = setInterval(() => {
                     if (typeof L !== 'undefined') {
                         clearInterval(checkLeaflet);
@@ -251,17 +363,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 500);
     }
 
-    // Initialize countdown
     updateCountdown();
     setInterval(updateCountdown, 1000);
 
-    // Initialize tooltips
     initializeTooltips();
+    initializeMatchesFiltering();
 
-    // Set up event listeners
     const divisionSelect = document.getElementById('division-select');
     if (divisionSelect) {
         divisionSelect.addEventListener('change', switchDivision);
+    }
+
+    const competitionSelect = document.getElementById('competition-select');
+    if (competitionSelect) {
+        competitionSelect.addEventListener('change', switchCompetition);
     }
 
     const refreshBtn = document.getElementById('refresh-standings-btn');
@@ -269,7 +384,6 @@ document.addEventListener('DOMContentLoaded', function () {
         refreshBtn.addEventListener('click', refreshStandings);
     }
 
-    // Auto-refresh standings every 5 minutes
     setInterval(refreshStandings, 5 * 60 * 1000);
 });
 
@@ -277,3 +391,4 @@ document.addEventListener('DOMContentLoaded', function () {
 window.initMap = initMap;
 window.switchDivision = switchDivision;
 window.refreshStandings = refreshStandings;
+window.switchCompetition = switchCompetition;

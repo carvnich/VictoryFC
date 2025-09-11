@@ -70,7 +70,7 @@
     <hr class="mx-auto rounded" style="width: 90%; height: 4px; background-color: #e9ecef; opacity: 1; border: none;">
 
     <!-- News Section -->
-    <div class="card-body">
+    @* <div class="card-body">
         <h3 class="card-title mb-3"><i class="bi bi-newspaper me-2"></i>News</h3>
         <ul class="nav nav-pills mb-3" role="tablist">
             <li class="nav-item"><button class="nav-link text-black active" data-bs-toggle="pill" data-bs-target="#all-news"><i class="bi bi-list-ul me-1"></i>All News</button></li>
@@ -119,25 +119,25 @@
         </div>
     </div>
 
-    <hr class="mx-auto rounded" style="width: 90%; height: 4px; background-color: #e9ecef; opacity: 1; border: none;">
+    <hr class="mx-auto rounded" style="width: 90%; height: 4px; background-color: #e9ecef; opacity: 1; border: none;"> *@
 
     <!-- Shop Section -->
-    <div class="card-body">
-        <h3 class="card-title mb-4"><i class="bi bi-bag-fill me-2"></i>Shop</h3>
-        <div class="row g-3">
+    <div class="card-body" style="background-image: '~/images/gear/manrocketlogo.png'; background-size: cover; background-position: center;">
+        <h3 class="card-title mb-4"><img src="~/images/gear/manrocketlogo.png" alt="Man Rocket Logo" height="55" class="rounded-circle pe-2" />Shop</h3>
+        <div class="row g-2">
             @for (int i = 0; i < 6 && i < Model.ShopItems.Count; i++)
             {
                 var item = Model.ShopItems[i];
                 <div class="col-lg-2 col-md-4 col-6">
                     <a href="@item.Url" target="_blank" class="text-decoration-none">
                         <div class="card border shadow-sm h-100">
-                            <div class="d-flex align-items-center justify-content-center bg-light" style="height:120px;">
-                                <i class="bi @item.IconClass display-6 text-muted"></i>
+                            <div class="d-flex align-items-center justify-content-center" style="height:120px;">
+                                <img src=@item.Image alt=@item.Name height="120" class="" />
                             </div>
                             <div class="card-body text-center p-2">
                                 <h6 class="card-title mb-1 small">@item.Name</h6>
                                 <p class="text-muted small mb-1" style="font-size: 0.75rem;">@item.Description</p>
-                                <p class="fw-bold text-primary mb-0 small">@item.Price</p>
+                                <p class="fw-bold text-danger mb-0 small">@item.Price</p>
                             </div>
                         </div>
                     </a>
@@ -193,7 +193,7 @@
                             <td class="text-center border-0">
                                 @foreach (var match in team.LastFiveMatches)
                                 {
-                                    <span class="d-inline-flex align-items-center justify-content-center rounded-circle me-1 match-result" style="width:20px;height:20px;background:@(match.IsWin ? "#24a700" : match.IsDraw ? "#6c757d" : "#ff0000")" data-bs-toggle="tooltip" title="@match.Opponent">
+                                    <span class="d-inline-flex align-items-center justify-content-center rounded-circle me-1 match-result" style="width: 20px; height: 20px; background: @(match.IsWin ? "#24a700" : match.IsDraw ? "#6c757d" : "#ff0000")" data-bs-toggle="tooltip" title="@match.Opponent">
                                         <i class="bi @(match.IsWin ? "bi-check" : match.IsDraw ? "bi-dash" : "bi-x") text-white" style="display: flex; font-size:18px"></i>
                                     </span>
                                 }

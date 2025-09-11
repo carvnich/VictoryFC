@@ -1,0 +1,211 @@
+﻿@model VictoryFC.Models.MatchesViewModel
+
+@{
+    ViewData["Title"] = "Matches";
+}
+
+<div class="card border shadow">
+    <div class="card-body">
+        <div class="row align-items-center mb-3">
+            <div class="col">
+                <h3 class="card-title mb-0"><i class="bi bi-calendar-event me-2"></i>All Matches</h3>
+            </div>
+            <div class="col-auto">
+                <select class="form-select" id="competition-select">
+                    <option value="all" selected>All Competitions</option>
+                    <option value="regular">Division 3</option>
+                    <option value="spence">Spence Cup</option>
+                </select>
+            </div>
+        </div>
+
+        <ul class="nav nav-pills mb-4" role="tablist">
+            <li class="nav-item"><button class="nav-link text-black active" data-bs-toggle="pill" data-bs-target="#all-matches"><i class="bi bi-list-ul me-1"></i>All Matches</button></li>
+            <li class="nav-item"><button class="nav-link text-black" data-bs-toggle="pill" data-bs-target="#victory-matches"><i class="bi bi-trophy me-1"></i>Victory FC</button></li>
+            <li class="nav-item"><button class="nav-link text-black" data-bs-toggle="pill" data-bs-target="#united-matches"><i class="bi bi-shield me-1"></i>United Teams</button></li>
+            <li class="nav-item"><button class="nav-link text-black" data-bs-toggle="pill" data-bs-target="#proto-matches"><i class="bi bi-hexagon me-1"></i>Proto Teams</button></li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="all-matches">
+                @{
+                    var allMatches = Model.Matches.OrderByDescending(m => m.GameDate).GroupBy(m => m.GameDate.Date).OrderByDescending(g => g.Key);
+                }
+                @foreach (var dateGroup in allMatches)
+                {
+                    <div class="mb-4">
+                        <h5 class="text-muted mb-3 border-bottom pb-2">@dateGroup.Key.ToString("dddd, MMMM dd, yyyy")</h5>
+                        @foreach (var match in dateGroup.OrderBy(m => m.GameDate))
+                        {
+                            <div class="row align-items-center p-2 m-2 rounded match-row @match.CompetitionClass">
+                                <div class="col-5 col-md-4 text-end">
+                                    <span class="fw-bold @((match.HomeTeam == "Victory FC") ? "text-danger" : "")">@match.HomeTeam</span>
+                                </div>
+                                <div class="col-2 col-md-4 text-center">
+                                    @if (match.IsCompleted)
+                                    {
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <span class="fs-4 fw-bold me-2">@match.HomeScore</span>
+                                            <span class="text-muted">-</span>
+                                            <span class="fs-4 fw-bold ms-2">@match.AwayScore</span>
+                                        </div>
+                                        <div class="small text-muted">
+                                            <div>@match.FormattedTime</div>
+                                            <div>@match.Field</div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="mb-0 fw-bold">vs</div>
+                                        <div class="small text-muted">
+                                            <div>@match.FormattedTime</div>
+                                            <div>@match.Field</div>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="col-5 col-md-4">
+                                    <span class="fw-bold @((match.AwayTeam == "Victory FC") ? "text-danger" : "")">@match.AwayTeam</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="tab-pane fade" id="victory-matches">
+                @{
+                    var victoryMatches = Model.Matches.Where(m => m.HomeTeam == "Victory FC" || m.AwayTeam == "Victory FC").OrderByDescending(m => m.GameDate).GroupBy(m => m.GameDate.Date).OrderByDescending(g => g.Key);
+                }
+                @foreach (var dateGroup in victoryMatches)
+                {
+                    <div class="mb-4">
+                        <h5 class="text-muted mb-3 border-bottom pb-2">@dateGroup.Key.ToString("dddd, MMMM dd, yyyy")</h5>
+                        @foreach (var match in dateGroup.OrderBy(m => m.GameDate))
+                        {
+                            <div class="row align-items-center p-2 m-2 rounded match-row @match.CompetitionClass">
+                                <div class="col-5 col-md-4 text-end">
+                                    <span class="fw-bold @((match.HomeTeam == "Victory FC") ? "text-danger" : "")">@match.HomeTeam</span>
+                                </div>
+                                <div class="col-2 col-md-4 text-center">
+                                    @if (match.IsCompleted)
+                                    {
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <span class="fs-4 fw-bold me-2">@match.HomeScore</span>
+                                            <span class="text-muted">-</span>
+                                            <span class="fs-4 fw-bold ms-2">@match.AwayScore</span>
+                                        </div>
+                                        <div class="small text-muted">
+                                            <div>@match.FormattedTime</div>
+                                            <div>@match.Field</div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="badge bg-primary mb-1">vs</div>
+                                        <div class="small text-muted">
+                                            <div>@match.FormattedTime</div>
+                                            <div>@match.Field</div>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="col-5 col-md-4">
+                                    <span class="fw-bold @((match.AwayTeam == "Victory FC") ? "text-danger" : "")">@match.AwayTeam</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="tab-pane fade" id="united-matches">
+                @{
+                    var unitedMatches = Model.Matches.Where(m => m.HomeTeam.Contains("United") || m.AwayTeam.Contains("United")).OrderByDescending(m => m.GameDate).GroupBy(m => m.GameDate.Date).OrderByDescending(g => g.Key);
+                }
+                @foreach (var dateGroup in unitedMatches)
+                {
+                    <div class="mb-4">
+                        <h5 class="text-muted mb-3 border-bottom pb-2">@dateGroup.Key.ToString("dddd, MMMM dd, yyyy")</h5>
+                        @foreach (var match in dateGroup.OrderBy(m => m.GameDate))
+                        {
+                            <div class="row align-items-center p-2 m-2 rounded match-row @match.CompetitionClass">
+                                <div class="col-5 col-md-4 text-end">
+                                    <span class="fw-bold @((match.HomeTeam == "Victory FC") ? "text-danger" : "")">@match.HomeTeam</span>
+                                </div>
+                                <div class="col-2 col-md-4 text-center">
+                                    @if (match.IsCompleted)
+                                    {
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <span class="fs-4 fw-bold me-2">@match.HomeScore</span>
+                                            <span class="text-muted">-</span>
+                                            <span class="fs-4 fw-bold ms-2">@match.AwayScore</span>
+                                        </div>
+                                        <div class="small text-muted">
+                                            <div>@match.FormattedTime</div>
+                                            <div>@match.Field</div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="badge bg-primary mb-1">vs</div>
+                                        <div class="small text-muted">
+                                            <div>@match.FormattedTime</div>
+                                            <div>@match.Field</div>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="col-5 col-md-4">
+                                    <span class="fw-bold @((match.AwayTeam == "Victory FC") ? "text-danger" : "")">@match.AwayTeam</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="tab-pane fade" id="proto-matches">
+                @{
+                    var protoMatches = Model.Matches.Where(m => m.HomeTeam.Contains("Proto") || m.AwayTeam.Contains("Proto")).OrderByDescending(m => m.GameDate).GroupBy(m => m.GameDate.Date).OrderByDescending(g => g.Key);
+                }
+                @foreach (var dateGroup in protoMatches)
+                {
+                    <div class="mb-4">
+                        <h5 class="text-muted mb-3 border-bottom pb-2">@dateGroup.Key.ToString("dddd, MMMM dd, yyyy")</h5>
+                        @foreach (var match in dateGroup.OrderBy(m => m.GameDate))
+                        {
+                            <div class="row align-items-center py-2 rounded match-row @match.CompetitionClass">
+                                <div class="col-5 col-md-4 text-end">
+                                    <span class="fw-bold @((match.HomeTeam == "Victory FC") ? "text-danger" : "")">@match.HomeTeam</span>
+                                </div>
+                                <div class="col-2 col-md-4 text-center">
+                                    @if (match.IsCompleted)
+                                    {
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <span class="fs-4 fw-bold me-2">@match.HomeScore</span>
+                                            <span class="text-muted">-</span>
+                                            <span class="fs-4 fw-bold ms-2">@match.AwayScore</span>
+                                        </div>
+                                        <div class="small text-muted">
+                                            <div>@match.FormattedTime</div>
+                                            <div>@match.Field</div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="badge bg-primary mb-1">vs</div>
+                                        <div class="small text-muted">
+                                            <div>@match.FormattedTime</div>
+                                            <div>@match.Field</div>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="col-5 col-md-4">
+                                    <span class="fw-bold @((match.AwayTeam == "Victory FC") ? "text-danger" : "")">@match.AwayTeam</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

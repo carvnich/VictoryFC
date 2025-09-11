@@ -8,6 +8,8 @@ namespace VictoryFC.Services
         Task<GameResult> GetNextGameAsync();
         Task<List<GameResult>> GetRecentResultsAsync(int count = 5);
         Task<List<GameResult>> GetUpcomingGamesAsync(int count = 3);
+        Task<List<GameResult>> GetAllMatchesAsync();
+        Task<List<GameResult>> GetMatchesByCompetitionAsync(string competition = "all");
         Task<SeasonStats> GetSeasonStatsAsync();
         Task<string> GetNextGameLocationAsync();
     }

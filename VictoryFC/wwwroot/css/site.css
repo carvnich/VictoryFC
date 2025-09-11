@@ -20,9 +20,18 @@ body {
 }
 
 /* Match result hover effect */
-.match-result:hover {
+/*.match-result:hover {
     transform: scale(1.1);
     transition: transform 0.1s;
+}*/
+
+/* Competition-based backgrounds */
+.match-row.regular-season {
+    background-color: rgb(32, 121, 18, 0.05);
+}
+
+.match-row.spence-cup {
+    background-color: rgb(35, 198, 209, 0.05);
 }
 
 /* Leaflet map styling - CRITICAL for map display */

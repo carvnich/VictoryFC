@@ -66,14 +66,14 @@ namespace VictoryFC.Controllers
         {
             return new List<ShopItem>
             {
-                new() { Name = "Home Jersey", Description = "Official 2025 Season", Price = "$45.99", IconClass = "bi-shirt", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
-                new() { Name = "Training Top", Description = "Moisture-wicking", Price = "$32.99", IconClass = "bi-shirt", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
-                new() { Name = "Team Shorts", Description = "Lightweight", Price = "$24.99", IconClass = "bi-shorts", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
-                new() { Name = "Club Hoodie", Description = "Cool weather", Price = "$54.99", IconClass = "bi-layers", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
-                new() { Name = "Victory FC Scarf", Description = "Show support", Price = "$18.99", IconClass = "bi-award", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
-                new() { Name = "Water Bottle", Description = "Stay hydrated", Price = "$12.99", IconClass = "bi-droplet", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
-                new() { Name = "Cap", Description = "Sun protection", Price = "$19.99", IconClass = "bi-hat", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
-                new() { Name = "Gym Bag", Description = "Carry your gear", Price = "$29.99", IconClass = "bi-bag", Url = "https://manrocket.ca/collections/Victory-football-club-1" }
+                new() { Name = "Victory FC T-Shirt", Description = "Adult", Price = "$24.99", Image = "/images/gear/tshirt_switch.png", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
+                new() { Name = "Victory FC T-Shirt", Description = "Youth", Price = "$16.99", Image = "/images/gear/tshirt_front_logo.png", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
+                new() { Name = "Victory FC T-Shirt", Description = "Adult", Price = "$20.99", Image = "/images/gear/tshirt_back_logo.png", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
+                new() { Name = "Victory FC Hoodie", Description = "Adult", Price = "$49.99", Image = "/images/gear/hoodie.png", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
+                new() { Name = "Victory FC Hoodie", Description = "Youth", Price = "$34.99", Image = "/images/gear/hoodie_youth.png", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
+                new() { Name = "Victory FC Hat", Description = "Snapback", Price = "$24.99", Image = "/images/gear/hat.png", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
+                new() { Name = "Victory FC Long Sleeve", Description = "Dri-Fit", Price = "$29.99", Image = "/images/gear/long_sleeve.png", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
+                new() { Name = "Victory FC Toque", Description = "VFC Nike", Price = "$29.99", Image = "/images/gear/toque.png", Url = "https://manrocket.ca/collections/Victory-football-club-1" }
             };
         }
     }
