@@ -1,4 +1,4 @@
-﻿// VictoryFC Dynamic Functionality
+﻿// VictoryFC Dynamic Functionality - Using Partial Views
 
 let map;
 
@@ -101,25 +101,66 @@ function updateCountdown() {
     }
 }
 
-// Division switching functionality
+// Division switching functionality - now uses partial views
 async function switchDivision() {
     const divisionSelect = document.getElementById('division-select');
     if (!divisionSelect) return;
 
     const division = divisionSelect.value;
     try {
-        const response = await fetch(`/Home/GetStandings?division=${division}`);
-        const data = await response.json();
-        updateStandingsTable(data.standings);
+        // Option 1: Use partial view for complete HTML consistency
+        const response = await fetch(`/Home/GetStandingsPartial?division=${division}`);
+        const html = await response.text();
+
+        const standingsContainer = document.querySelector('.table-responsive');
+        if (standingsContainer) {
+            standingsContainer.outerHTML = html;
+            initializeTooltips();
+            initializeStandingsExpansion(); // Re-initialize expansion after content update
+        }
+
         updateLastUpdateTime();
+        showNotification('Standings updated successfully!', 'success');
     } catch (error) {
         console.error('Error switching division:', error);
         showNotification('Failed to load division data', 'error');
     }
 }
 
-// Competition switching functionality
+// Competition switching functionality - now uses partial views
 async function switchCompetition() {
+    const competitionSelect = document.getElementById('competition-select');
+    if (!competitionSelect) return;
+
+    const competition = competitionSelect.value;
+    try {
+        // Use partial view for matches list
+        const response = await fetch(`/Matches/GetMatchesPartial?competition=${competition}`);
+        const html = await response.text();
+
+        // Update both tabs with the same partial view logic
+        const allMatchesTab = document.getElementById('all-matches');
+        const victoryMatchesTab = document.getElementById('victory-matches');
+
+        if (allMatchesTab && victoryMatchesTab) {
+            // For Victory FC tab, we'd need a separate endpoint or filter the HTML
+            allMatchesTab.innerHTML = html;
+
+            // For Victory tab, make another call with filtered data
+            const victoryResponse = await fetch(`/Matches/GetMatchesPartial?competition=${competition}&filter=victory`);
+            const victoryHtml = await victoryResponse.text();
+            victoryMatchesTab.innerHTML = victoryHtml;
+        }
+
+        showNotification('Matches updated successfully!', 'success');
+    } catch (error) {
+        console.error('Error switching competition:', error);
+        showNotification('Failed to load competition data', 'error');
+    }
+}
+
+// Alternative: Keep the old JSON approach for backwards compatibility
+async function switchCompetitionJSON() {
     const competitionSelect = document.getElementById('competition-select');
     if (!competitionSelect) return;
 
@@ -135,8 +176,9 @@ async function switchCompetition() {
     }
 }
 
-// Update matches display
+// Keep the old updateMatchesDisplay for fallback
 function updateMatchesDisplay(matches) {
+    // Same implementation as before - fallback for when partial views aren't used
     const generateMatchesHTML = (filteredMatches) => {
         const groupedMatches = filteredMatches.reduce((groups, match) => {
             const date = new Date(match.gameDate).toDateString();
@@ -165,11 +207,11 @@ function updateMatchesDisplay(matches) {
                         });
 
                         return `
-                            <div class="row align-items-center p-2 m-2 rounded match-row ${match.competition === 'spence' ? 'spence-cup' : 'regular-season'}">
-                                <div class="col-5 col-md-4 text-end">
+                            <div class="row align-items-center p-1 p-md-2 m-1 m-md-2 rounded match-row ${match.competition === 'spence' ? 'spence-cup' : 'regular-season'}">
+                                <div class="col-4 col-md-4 text-end">
                                     <span class="fw-bold ${match.homeTeam === 'Victory FC' ? 'text-danger' : ''}">${match.homeTeam}</span>
                                 </div>
-                                <div class="col-2 col-md-4 text-center">
+                                <div class="col-4 col-md-4 text-center">
                                     ${match.isCompleted ? `
                                         <div class="d-flex align-items-center justify-content-center">
                                             <span class="fs-4 fw-bold me-2">${match.homeScore}</span>
@@ -178,17 +220,17 @@ function updateMatchesDisplay(matches) {
                                         </div>
                                         <div class="small text-muted">
                                             <div>${gameTime}</div>
-                                            <div>${match.field}</div>
+                                            <div class="d-none d-md-block">${match.field}</div>
                                         </div>
                                     ` : `
-                                        <div class="fw-bold">vs</div>
+                                        <div class="mb-0 fw-bold">vs</div>
                                         <div class="small text-muted">
                                             <div>${gameTime}</div>
-                                            <div>${match.field}</div>
+                                            <div class="d-none d-md-block">${match.field}</div>
                                         </div>
                                     `}
                                 </div>
-                                <div class="col-5 col-md-4">
+                                <div class="col-4 col-md-4">
                                     <span class="fw-bold ${match.awayTeam === 'Victory FC' ? 'text-danger' : ''}">${match.awayTeam}</span>
                                 </div>
                             </div>
@@ -197,18 +239,15 @@ function updateMatchesDisplay(matches) {
 
                 return `
                     <div class="mb-4">
-                        <h5 class="text-muted mb-3 border-bottom pb-2">${dateFormatted}</h5>
+                        <h5 class="text-black mb-3 border-bottom pb-2">${dateFormatted}</h5>
                         ${matchesHTML}
                     </div>
                 `;
             }).join('');
     };
 
-    // Update all tabs
     const allMatchesTab = document.getElementById('all-matches');
     const victoryMatchesTab = document.getElementById('victory-matches');
-    const unitedMatchesTab = document.getElementById('united-matches');
-    const protoMatchesTab = document.getElementById('proto-matches');
 
     if (allMatchesTab) {
         allMatchesTab.innerHTML = generateMatchesHTML(matches);
@@ -218,18 +257,6 @@ function updateMatchesDisplay(matches) {
         const victoryMatches = matches.filter(m => m.homeTeam === 'Victory FC' || m.awayTeam === 'Victory FC');
         victoryMatchesTab.innerHTML = generateMatchesHTML(victoryMatches);
     }
-
-    if (unitedMatchesTab) {
-        const unitedMatches = matches.filter(m =>
-            m.homeTeam.includes('United') || m.awayTeam.includes('United'));
-        unitedMatchesTab.innerHTML = generateMatchesHTML(unitedMatches);
-    }
-
-    if (protoMatchesTab) {
-        const protoMatches = matches.filter(m =>
-            m.homeTeam.includes('Proto') || m.awayTeam.includes('Proto'));
-        protoMatchesTab.innerHTML = generateMatchesHTML(protoMatches);
-    }
 }
 
 // Refresh standings functionality
@@ -238,9 +265,17 @@ async function refreshStandings() {
     const division = divisionSelect ? divisionSelect.value : 'regular';
 
     try {
-        const response = await fetch(`/Home/GetStandings?division=${division}`);
-        const data = await response.json();
-        updateStandingsTable(data.standings);
+        // Use partial view approach
+        const response = await fetch(`/Home/GetStandingsPartial?division=${division}`);
+        const html = await response.text();
+
+        const standingsContainer = document.querySelector('.table-responsive');
+        if (standingsContainer) {
+            standingsContainer.outerHTML = html;
+            initializeTooltips();
+            initializeStandingsExpansion(); // Re-initialize expansion after refresh
+        }
+
         updateLastUpdateTime();
         showNotification('Standings updated successfully!', 'success');
     } catch (error) {
@@ -249,45 +284,36 @@ async function refreshStandings() {
     }
 }
 
-// Update standings table
-function updateStandingsTable(standings) {
-    const tbody = document.querySelector('#standings-table tbody');
-    if (!tbody) return;
+// Initialize standings row expansion for mobile
+function initializeStandingsExpansion() {
+    const standingsRows = document.querySelectorAll('.standings-row');
 
-    tbody.innerHTML = '';
+    standingsRows.forEach(row => {
+        row.addEventListener('click', function () {
+            // Only work on small screens
+            if (window.innerWidth >= 768) return;
 
-    standings.forEach((team, index) => {
-        const row = document.createElement('tr');
-        row.setAttribute('data-team', team.team);
+            const expandedRow = row.nextElementSibling;
+            const expandIcon = row.querySelector('.expand-icon');
 
-        row.innerHTML = `
-            <td class="text-dark border-0">${index + 1} &nbsp;&nbsp; ${team.team}</td>
-            <td class="text-center text-dark border-0">${team.p}</td>
-            <td class="text-center text-dark border-0">${team.w}</td>
-            <td class="text-center text-dark border-0">${team.d}</td>
-            <td class="text-center text-dark border-0">${team.l}</td>
-            <td class="text-center text-dark border-0 d-none d-md-table-cell">${team.gf}</td>
-            <td class="text-center text-dark border-0 d-none d-md-table-cell">${team.ga}</td>
-            <td class="text-center text-dark border-0">${team.gd >= 0 ? '+' : ''}${team.gd}</td>
-            <td class="text-center text-dark border-0">${team.pts}</td>
-            <td class="text-center border-0">${generateLastFiveHTML(team.lastFiveMatches)}</td>
-        `;
+            if (expandedRow && expandedRow.classList.contains('expanded-row')) {
+                const isExpanded = expandedRow.style.display !== 'none';
 
-        tbody.appendChild(row);
+                if (isExpanded) {
+                    // Collapse
+                    expandedRow.style.display = 'none';
+                    expandIcon.classList.remove('bi-chevron-up');
+                    expandIcon.classList.add('bi-chevron-down');
+                    row.classList.remove('table-active');
+                } else {
+                    // Expand
+                    expandedRow.style.display = 'table-row';
+                    expandIcon.classList.remove('bi-chevron-down');
+                    expandIcon.classList.add('bi-chevron-up');
+                }
+            }
+        });
     });
-
-    initializeTooltips();
-}
-
-// Generate last five matches HTML
-function generateLastFiveHTML(matches) {
-    if (!matches || !Array.isArray(matches)) return '';
-
-    return matches.map(match => {
-        const bgColor = match.isWin ? '#24a700' : match.isDraw ? '#6c757d' : '#ff0000';
-        const icon = match.isWin ? 'bi-check' : match.isDraw ? 'bi-dash' : 'bi-x';
-        return `<span class="d-inline-flex align-items-center justify-content-center rounded-circle me-1 match-result" style="width:20px;height:20px;background:${bgColor}" data-bs-toggle="tooltip" title="${match.opponent}"><i class="bi ${icon} text-white" style="display: flex; font-size:14px"></i></span>`;
-    }).join('');
 }
 
 // Show notification
@@ -368,6 +394,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     initializeTooltips();
     initializeMatchesFiltering();
+    initializeStandingsExpansion(); // Initialize on page load
 
     const divisionSelect = document.getElementById('division-select');
     if (divisionSelect) {
@@ -376,6 +403,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const competitionSelect = document.getElementById('competition-select');
     if (competitionSelect) {
+        // Use partial view approach by default, fallback to JSON if needed
         competitionSelect.addEventListener('change', switchCompetition);
     }
 

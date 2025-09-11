@@ -1,5 +1,5 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using VictoryFC.Models;
 using VictoryFC.Services;
 
@@ -45,6 +45,14 @@ namespace VictoryFC.Controllers
         {
             var standings = await _gameDataService.GetCurrentStandingsAsync(division);
             return Json(new { standings });
+        }
+
+        // Return standings partial view
+        [HttpGet]
+        public async Task<IActionResult> GetStandingsPartial(string division = "regular")
+        {
+            var standings = await _gameDataService.GetCurrentStandingsAsync(division);
+            return PartialView("_StandingsTable", standings);
         }
 
         [HttpGet]

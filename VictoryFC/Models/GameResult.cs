@@ -16,4 +16,7 @@
         public string FormattedTime => GameDate.ToString("h:mm tt");
         public string CompetitionClass => Competition == "spence" ? "spence-cup" : "regular-season";
     }
+
+    // Alias for partial view compatibility
+    public class Match : GameResult { }
 }
