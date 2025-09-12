@@ -19,6 +19,12 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+//using (var scope = app.Services.CreateScope())
+//{
+//    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+//    DatabaseSeeder.SeedDatabase(context);  // REMOVE THIS LINE AFTER FIRST RUN
+//}
+
 app.UseHttpsRedirection();
 app.UseRouting();
 

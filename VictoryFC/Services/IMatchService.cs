@@ -11,5 +11,6 @@ namespace VictoryFC.Services
         Task<List<Match>> GetMatchesByCompetitionAsync(string competition = "all");
         Task<SeasonStats> GetSeasonStatsAsync();
         Task<string> GetNextMatchLocationAsync();
+        Task<List<Scorer>> GetTopScorersAsync(string competition = "regular", int count = 10);
     }
 }
