@@ -6,16 +6,16 @@ namespace VictoryFC.Controllers
 {
     public class MatchesController : Controller
     {
-        private readonly IGameDataService _gameDataService;
+        private readonly IMatchService _matchService;
 
-        public MatchesController(IGameDataService gameDataService)
+        public MatchesController(IMatchService matchService)
         {
-            _gameDataService = gameDataService;
+            _matchService = matchService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var allMatches = await _gameDataService.GetAllMatchesAsync();
+            var allMatches = await _matchService.GetAllMatchesAsync();
             var viewModel = new MatchesViewModel { Matches = allMatches };
             return View(viewModel);
         }
@@ -23,30 +23,34 @@ namespace VictoryFC.Controllers
         [HttpGet]
         public async Task<IActionResult> GetMatches(string competition = "all")
         {
-            var matches = await _gameDataService.GetMatchesByCompetitionAsync(competition);
+            var matches = await _matchService.GetMatchesByCompetitionAsync(competition);
             return Json(new { matches });
         }
 
-        // Return partial view HTML
         [HttpGet]
-        public async Task<IActionResult> GetMatchesPartial(string competition = "all")
+        public async Task<IActionResult> GetMatchesPartial(string competition = "all", string filter = "all")
         {
-            var matches = await _gameDataService.GetMatchesByCompetitionAsync(competition);
+            var matches = await _matchService.GetMatchesByCompetitionAsync(competition);
+
+            // Filter for Victory FC matches if requested
+            if (filter == "victory")
+            {
+                matches = matches.Where(m => m.HomeTeam == "Victory FC" || m.AwayTeam == "Victory FC").ToList();
+            }
+
             var groupedMatches = matches
-                .OrderByDescending(m => m.GameDate)
-                .GroupBy(m => m.GameDate.Date)
+                .OrderByDescending(m => m.Date)
+                .GroupBy(m => m.Date.Date)
                 .OrderByDescending(g => g.Key);
 
             return PartialView("_MatchesList", groupedMatches);
         }
 
-        // Return a single match row
         [HttpGet]
-        public IActionResult GetMatchRow(int gameNumber)
+        public IActionResult GetMatchRow(int id)
         {
             // You could fetch a single match here if needed
-            // For now, this is just an example structure
-            var match = new GameResult(); // Get from service
+            var match = new Match(); // Get from service by id
             return PartialView("_MatchRow", match);
         }
     }

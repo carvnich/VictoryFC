@@ -27,13 +27,13 @@
         <div class="tab-content">
             <div class="tab-pane fade show active" id="all-matches">
                 @{
-                    var allMatches = Model.Matches.OrderByDescending(m => m.GameDate).GroupBy(m => m.GameDate.Date).OrderByDescending(g => g.Key);
+                    var allMatches = Model.Matches.OrderByDescending(m => m.Date).GroupBy(m => m.Date.Date).OrderByDescending(g => g.Key);
                 }
                 @foreach (var dateGroup in allMatches)
                 {
                     <div class="mb-4">
                         <h5 class="text-black mb-3 border-bottom pb-2">@dateGroup.Key.ToString("dddd, MMMM dd, yyyy")</h5>
-                        @foreach (var match in dateGroup.OrderBy(m => m.GameDate))
+                        @foreach (var match in dateGroup.OrderBy(m => m.Date))
                         {
                             @Html.Partial("_MatchRow", match)
                         }
@@ -43,13 +43,13 @@
 
             <div class="tab-pane fade" id="victory-matches">
                 @{
-                    var victoryMatches = Model.Matches.Where(m => m.HomeTeam == "Victory FC" || m.AwayTeam == "Victory FC").OrderByDescending(m => m.GameDate).GroupBy(m => m.GameDate.Date).OrderByDescending(g => g.Key);
+                    var victoryMatches = Model.Matches.Where(m => m.HomeTeam == "Victory FC" || m.AwayTeam == "Victory FC").OrderByDescending(m => m.Date).GroupBy(m => m.Date.Date).OrderByDescending(g => g.Key);
                 }
                 @foreach (var dateGroup in victoryMatches)
                 {
                     <div class="mb-4">
                         <h5 class="text-muted mb-3 border-bottom pb-2">@dateGroup.Key.ToString("dddd, MMMM dd, yyyy")</h5>
-                        @foreach (var match in dateGroup.OrderBy(m => m.GameDate))
+                        @foreach (var match in dateGroup.OrderBy(m => m.Date))
                         {
                             @Html.Partial("_MatchRow", match)
                         }

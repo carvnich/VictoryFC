@@ -1,115 +1,115 @@
-﻿@model VictoryFC.Models.DynamicHomeViewModel
+﻿@model VictoryFC.Models.HomeViewModel
 
 @{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
 }
 
 <div class="card border shadow">
-    <!-- Hero Section with Game Countdown -->
-    <div class="card-body bg-primary text-white position-relative overflow-hidden team-form-@Model.TeamFormClass" style="background-image: url('/images/herobg.jpg'); background-size: cover; background-position: center;">
-        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark" style="opacity: 0.5;"></div>
-        <div class="position-relative">
-            <div class="row align-items-center h-100">
-                <div class="col-lg-6">
-                    <div class="text-center py-4">
-                        @if (Model.NextGame != null)
-                        {
-                            <h1 class="mb-4 fw-bold fs-2 fs-md-1">@Model.NextGame.HomeTeam vs @Model.NextGame.AwayTeam</h1>
-                            <div class="d-flex justify-content-center align-items-start gap-1 gap-md-2 mb-4" id="countdown" data-target="@Model.NextGameCountdownTarget">
-                                <div class="text-center"><div class="display-6 display-md-5 fw-bold" id="days">00</div><small class="d-block">Days</small></div>
-                                <div class="display-6 fw-bold">:</div>
-                                <div class="text-center"><div class="display-6 display-md-5 fw-bold" id="hours">00</div><small class="d-block">Hours</small></div>
-                                <div class="display-6 fw-bold">:</div>
-                                <div class="text-center"><div class="display-6 display-md-5 fw-bold" id="minutes">00</div><small class="d-block">Minutes</small></div>
-                                <div class="display-6 fw-bold">:</div>
-                                <div class="text-center"><div class="display-6 display-md-5 fw-bold" id="seconds">00</div><small class="d-block">Seconds</small></div>
-                            </div>
-                            <div class="mb-3">
-                                <p class="mb-2 fs-6 fs-md-5"><i class="bi bi-calendar me-2"></i>@Model.NextGame.FormattedDate at @Model.NextGame.FormattedTime</p>
-                                <p class="mb-2"><i class="bi bi-geo-alt me-2"></i>@Model.NextGame.Field</p>
-                                <p class="mb-0"><small>@Model.NextGameLocation</small></p>
-                            </div>
-                        }
-                        else
-                        {
-                            <h1 class="mb-4 fw-bold">Season Complete!</h1>
-                            <p class="fs-4">Thank you for your support this season!</p>
-                        }
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="p-2 p-md-4">
-                        @if (Model.NextGame != null)
-                        {
-                            <div class="bg-white rounded shadow-sm p-2">
-                                <div id="map" class="rounded" style="height: 250px; width: 100%;" data-location="@Model.NextGameLocation" data-field="@Model.NextGame.Field"></div>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="bg-white rounded shadow-sm p-3">
-                                <h5 class="text-dark mb-3"><i class="bi bi-trophy me-2"></i>Season Stats</h5>
-                                <div class="row text-center text-dark">
-                                    <div class="col-3"><div class="fw-bold fs-4 text-success">@Model.SeasonStats.Wins</div><small>Wins</small></div>
-                                    <div class="col-3"><div class="fw-bold fs-4 text-warning">@Model.SeasonStats.Draws</div><small>Draws</small></div>
-                                    <div class="col-3"><div class="fw-bold fs-4 text-danger">@Model.SeasonStats.Losses</div><small>Losses</small></div>
-                                    <div class="col-3"><div class="fw-bold fs-4 text-primary">@Model.SeasonStats.Points</div><small>Points</small></div>
-                                </div>
-                                <div class="mt-3 text-center text-dark">
-                                    <div class="fw-bold">@Model.SeasonStats.GoalsFor - @Model.SeasonStats.GoalsAgainst</div>
-                                    <small>Goals For - Goals Against</small>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<!-- Hero Section with Match Countdown -->
+	<div class="card-body bg-primary text-white position-relative overflow-hidden team-form-@Model.FormClass" style="background-image: url('/images/herobg.jpg'); background-size: cover; background-position: center;">
+		<div class="position-absolute top-0 start-0 w-100 h-100 bg-dark" style="opacity: 0.5;"></div>
+		<div class="position-relative">
+			<div class="row align-items-center h-100">
+				<div class="col-lg-6">
+					<div class="text-center py-4">
+						@if (Model.NextMatch != null)
+						{
+							<h1 class="mb-4 fw-bold fs-2 fs-md-1">@Model.NextMatch.HomeTeam vs @Model.NextMatch.AwayTeam</h1>
+							<div class="d-flex justify-content-center align-items-start gap-1 gap-md-2 mb-4" id="countdown" data-target="@Model.CountdownTarget">
+								<div class="text-center"><div class="display-6 display-md-5 fw-bold" id="days">00</div><small class="d-block">Days</small></div>
+								<div class="display-6 fw-bold">:</div>
+								<div class="text-center"><div class="display-6 display-md-5 fw-bold" id="hours">00</div><small class="d-block">Hours</small></div>
+								<div class="display-6 fw-bold">:</div>
+								<div class="text-center"><div class="display-6 display-md-5 fw-bold" id="minutes">00</div><small class="d-block">Minutes</small></div>
+								<div class="display-6 fw-bold">:</div>
+								<div class="text-center"><div class="display-6 display-md-5 fw-bold" id="seconds">00</div><small class="d-block">Seconds</small></div>
+							</div>
+							<div class="mb-3">
+								<p class="mb-2 fs-6 fs-md-5"><i class="bi bi-calendar me-2"></i>@Model.NextMatch.FormattedDate at @Model.NextMatch.FormattedTime</p>
+								<p class="mb-2"><i class="bi bi-geo-alt me-2"></i>@Model.NextMatch.Field</p>
+								<p class="mb-0"><small>@Model.NextMatchLocation</small></p>
+							</div>
+						}
+						else
+						{
+							<h1 class="mb-4 fw-bold">Season Complete!</h1>
+							<p class="fs-4">Thank you for your support this season!</p>
+						}
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="p-2 p-md-4">
+						@if (Model.NextMatch != null)
+						{
+							<div class="bg-white rounded shadow-sm p-2">
+								<div id="map" class="rounded" style="height: 250px; width: 100%;" data-location="@Model.NextMatchLocation" data-field="@Model.NextMatch.Field"></div>
+							</div>
+						}
+						else
+						{
+							<div class="bg-white rounded shadow-sm p-3">
+								<h5 class="text-dark mb-3"><i class="bi bi-trophy me-2"></i>Season Stats</h5>
+								<div class="row text-center text-dark">
+									<div class="col-3"><div class="fw-bold fs-4 text-success">@Model.Stats.Wins</div><small>Wins</small></div>
+									<div class="col-3"><div class="fw-bold fs-4 text-warning">@Model.Stats.Draws</div><small>Draws</small></div>
+									<div class="col-3"><div class="fw-bold fs-4 text-danger">@Model.Stats.Losses</div><small>Losses</small></div>
+									<div class="col-3"><div class="fw-bold fs-4 text-primary">@Model.Stats.Points</div><small>Points</small></div>
+								</div>
+								<div class="mt-3 text-center text-dark">
+									<div class="fw-bold">@Model.Stats.GoalsFor - @Model.Stats.GoalsAgainst</div>
+									<small>Goals For - Goals Against</small>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <hr class="mx-auto rounded" style="width: 90%; height: 4px; background-color: #e9ecef; opacity: 1; border: none;">
+	<hr class="mx-auto rounded" style="width: 90%; height: 4px; background-color: #e9ecef; opacity: 1; border: none;">
 
-    <!-- Shop Section -->
-    <div class="card-body" style="background-image: '~/images/gear/manrocketlogo.png'; background-size: cover; background-position: center;">
-        <h3 class="card-title mb-4"><img src="~/images/gear/manrocketlogo.png" alt="Man Rocket Logo" height="55" class="rounded-circle pe-2" />Shop</h3>
-        <div class="row g-2">
-            @for (int i = 0; i < 6 && i < Model.ShopItems.Count; i++)
-            {
-                var item = Model.ShopItems[i];
-                <div class="col-lg-2 col-md-4 col-6">
-                    <a href="@item.Url" target="_blank" class="text-decoration-none">
-                        <div class="card border shadow-sm h-100">
-                            <div class="d-flex align-items-center justify-content-center" style="height:120px;">
-                                <img src=@item.Image alt=@item.Name height="120" class="" />
-                            </div>
-                            <div class="card-body text-center p-2">
-                                <h6 class="card-title mb-1 small">@item.Name</h6>
-                                <p class="text-muted small mb-1" style="font-size: 0.75rem;">@item.Description</p>
-                                <p class="fw-bold text-danger mb-0 small">@item.Price</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            }
-        </div>
-    </div>
+	<!-- Shop Section -->
+	<div class="card-body" style="background-image: '~/images/gear/manrocketlogo.png'; background-size: cover; background-position: center;">
+		<h3 class="card-title mb-4"><img src="~/images/gear/manrocketlogo.png" alt="Man Rocket Logo" height="55" class="rounded-circle pe-2" />Shop</h3>
+		<div class="row g-2">
+			@for (int i = 0; i < 6 && i < Model.ShopItems.Count; i++)
+			{
+				var item = Model.ShopItems[i];
+				<div class="col-lg-2 col-md-4 col-6">
+					<a href="@item.Url" target="_blank" class="text-decoration-none">
+						<div class="card border shadow-sm h-100">
+							<div class="d-flex align-items-center justify-content-center" style="height:120px;">
+								<img src=@item.Image alt=@item.Name height="120" class="" />
+							</div>
+							<div class="card-body text-center p-2">
+								<h6 class="card-title mb-1 small">@item.Name</h6>
+								<p class="text-muted small mb-1" style="font-size: 0.75rem;">@item.Description</p>
+								<p class="fw-bold text-danger mb-0 small">@item.Price</p>
+							</div>
+						</div>
+					</a>
+				</div>
+			}
+		</div>
+	</div>
 
-    <hr class="mx-auto rounded" style="width: 90%; height: 4px; background-color: #e9ecef; opacity: 1; border: none;">
+	<hr class="mx-auto rounded" style="width: 90%; height: 4px; background-color: #e9ecef; opacity: 1; border: none;">
 
-    <!-- Dynamic Standings Section -->
-    <div class="card-body">
-        <div class="row align-items-center mb-3">
-            <div class="col">
-                <h3 class="card-title mb-0"><i class="bi bi-table me-2"></i>Standings</h3>
-            </div>
-            <div class="col-auto">
-                <select class="form-select me-2" id="division-select">
-                    <option value="regular" selected>Division 3</option>
-                    <option value="spence">Spence Cup</option>
-                </select>
-            </div>
-        </div>
+	<!-- Standings Section -->
+	<div class="card-body">
+		<div class="row align-items-center mb-3">
+			<div class="col">
+				<h3 class="card-title mb-0"><i class="bi bi-table me-2"></i>Standings</h3>
+			</div>
+			<div class="col-auto">
+				<select class="form-select me-2" id="division-select">
+					<option value="regular" selected>Division 3</option>
+					<option value="spence">Spence Cup</option>
+				</select>
+			</div>
+		</div>
 
-        @Html.Partial("_StandingsTable", Model.Standings)
-    </div>
+		@Html.Partial("_StandingsTable", Model.Standings)
+	</div>
 </div>

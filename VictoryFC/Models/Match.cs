@@ -1,9 +1,9 @@
 ﻿namespace VictoryFC.Models
 {
-    public class GameResult
+    public class Match
     {
-        public int GameNumber { get; set; }
-        public DateTime GameDate { get; set; }
+        public int Id { get; set; }
+        public DateTime Date { get; set; }
         public string Field { get; set; }
         public string HomeTeam { get; set; }
         public int? HomeScore { get; set; }
@@ -11,12 +11,11 @@
         public int? AwayScore { get; set; }
         public bool IsCompleted { get; set; }
         public string Competition { get; set; } = "regular"; // "regular" or "spence"
+
+        // Computed properties
         public string Result => IsCompleted ? $"{HomeScore} : {AwayScore}" : "vs";
-        public string FormattedDate => GameDate.ToString("MMM dd, yyyy");
-        public string FormattedTime => GameDate.ToString("h:mm tt");
+        public string FormattedDate => Date.ToString("MMM dd, yyyy");
+        public string FormattedTime => Date.ToString("h:mm tt");
         public string CompetitionClass => Competition == "spence" ? "spence-cup" : "regular-season";
     }
-
-    // Alias for partial view compatibility
-    public class Match : GameResult { }
 }

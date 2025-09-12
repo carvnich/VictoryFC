@@ -8,33 +8,29 @@ namespace VictoryFC.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IGameDataService _gameDataService;
+        private readonly IMatchService _matchService;
 
-        public HomeController(ILogger<HomeController> logger, IGameDataService gameDataService)
+        public HomeController(ILogger<HomeController> logger, IMatchService matchService)
         {
             _logger = logger;
-            _gameDataService = gameDataService;
+            _matchService = matchService;
         }
 
         public async Task<IActionResult> Index()
         {
             var shopItems = GetShopItems();
-            var standings = await _gameDataService.GetCurrentStandingsAsync("regular");
-            var nextGame = await _gameDataService.GetNextGameAsync();
-            var recentResults = await _gameDataService.GetRecentResultsAsync();
-            var upcomingGames = await _gameDataService.GetUpcomingGamesAsync();
-            var seasonStats = await _gameDataService.GetSeasonStatsAsync();
-            var nextGameLocation = await _gameDataService.GetNextGameLocationAsync();
+            var standings = await _matchService.GetStandingsAsync("regular");
+            var nextMatch = await _matchService.GetNextMatchAsync();
+            var stats = await _matchService.GetSeasonStatsAsync();
+            var nextMatchLocation = await _matchService.GetNextMatchLocationAsync();
 
-            var viewModel = new DynamicHomeViewModel
+            var viewModel = new HomeViewModel
             {
                 ShopItems = shopItems,
                 Standings = standings,
-                NextGame = nextGame,
-                RecentResults = recentResults,
-                UpcomingGames = upcomingGames,
-                SeasonStats = seasonStats,
-                NextGameLocation = nextGameLocation
+                NextMatch = nextMatch,
+                Stats = stats,
+                NextMatchLocation = nextMatchLocation
             };
 
             return View(viewModel);
@@ -43,26 +39,25 @@ namespace VictoryFC.Controllers
         [HttpGet]
         public async Task<IActionResult> GetStandings(string division = "regular")
         {
-            var standings = await _gameDataService.GetCurrentStandingsAsync(division);
+            var standings = await _matchService.GetStandingsAsync(division);
             return Json(new { standings });
         }
 
-        // Return standings partial view
         [HttpGet]
         public async Task<IActionResult> GetStandingsPartial(string division = "regular")
         {
-            var standings = await _gameDataService.GetCurrentStandingsAsync(division);
+            var standings = await _matchService.GetStandingsAsync(division);
             return PartialView("_StandingsTable", standings);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetLiveData()
         {
-            var standings = await _gameDataService.GetCurrentStandingsAsync("regular");
-            var nextGame = await _gameDataService.GetNextGameAsync();
-            var seasonStats = await _gameDataService.GetSeasonStatsAsync();
+            var standings = await _matchService.GetStandingsAsync("regular");
+            var nextMatch = await _matchService.GetNextMatchAsync();
+            var stats = await _matchService.GetSeasonStatsAsync();
 
-            return Json(new { standings, nextGame, seasonStats });
+            return Json(new { standings, nextMatch, stats });
         }
 
         public IActionResult Privacy() => View();

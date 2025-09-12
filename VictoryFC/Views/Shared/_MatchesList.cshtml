@@ -1,10 +1,10 @@
-﻿@model IEnumerable<IGrouping<DateTime, VictoryFC.Models.GameResult>>
+﻿@model IEnumerable<IGrouping<DateTime, VictoryFC.Models.Match>>
 
 @foreach (var dateGroup in Model)
 {
     <div class="mb-4">
         <h5 class="text-black mb-3 border-bottom pb-2">@dateGroup.Key.ToString("dddd, MMMM dd, yyyy")</h5>
-        @foreach (var match in dateGroup.OrderBy(m => m.GameDate))
+        @foreach (var match in dateGroup.OrderBy(m => m.Date))
         {
             @Html.Partial("_MatchRow", match)
         }

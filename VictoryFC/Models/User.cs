@@ -1,17 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace VictoryFC.Models
+﻿namespace VictoryFC.Models
 {
     public class User
     {
         public int Id { get; set; }
-        [Required]
-        public required string Name { get; set; }
-        [Required]
-        public required string Email { get; set; }
-        [Required]
-        public required string Password { get; set; }
-        [Required]
-        public required string Role { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public string Role { get; set; }
     }
 }
