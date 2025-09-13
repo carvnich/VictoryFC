@@ -71,7 +71,7 @@ namespace VictoryFC.Controllers
             {
                 new() { Name = "Victory FC T-Shirt", Description = "Adult", Price = "$24.99", Image = "/images/gear/tshirt_switch.png", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
                 new() { Name = "Victory FC T-Shirt", Description = "Youth", Price = "$16.99", Image = "/images/gear/tshirt_front_logo.png", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
-                new() { Name = "Victory FC T-Shirt", Description = "Adult", Price = "$20.99", Image = "/images/gear/tshirt_back_logo.png", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
+                new() { Name = "Victory FC T-Shirt", Description = "Adult", Price = "$20.00", Image = "/images/gear/tshirt_back_logo.png", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
                 new() { Name = "Victory FC Hoodie", Description = "Adult", Price = "$49.99", Image = "/images/gear/hoodie.png", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
                 new() { Name = "Victory FC Hoodie", Description = "Youth", Price = "$34.99", Image = "/images/gear/hoodie_youth.png", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
                 new() { Name = "Victory FC Hat", Description = "Snapback", Price = "$24.99", Image = "/images/gear/hat.png", Url = "https://manrocket.ca/collections/Victory-football-club-1" },
