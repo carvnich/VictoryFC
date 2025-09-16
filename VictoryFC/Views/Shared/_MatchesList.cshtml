@@ -1,12 +1,56 @@
 ﻿@model IEnumerable<IGrouping<DateTime, VictoryFC.Models.Match>>
+@{
+	var now = DateTime.Now;
+	var allMatches = Model.SelectMany(g => g).OrderByDescending(m => m.Date).ToList();
+	var upcomingMatches = allMatches.Where(m => m.Date >= now || (m.HomeScore == null && m.AwayScore == null)).ToList();
+	var pastMatches = allMatches.Where(m => m.Date < now && m.HomeScore != null && m.AwayScore != null).ToList();
 
-@foreach (var dateGroup in Model)
-{
-    <div class="mb-4">
-        <h5 class="text-black mb-3 border-bottom pb-2">@dateGroup.Key.ToString("dddd, MMMM dd, yyyy")</h5>
-        @foreach (var match in dateGroup.OrderBy(m => m.Date))
-        {
-            @Html.Partial("_MatchRow", match)
-        }
-    </div>
+	var groupedUpcoming = upcomingMatches.OrderByDescending(m => m.Date).GroupBy(m => m.Date.Date).OrderByDescending(g => g.Key);
+	var groupedPast = pastMatches.OrderByDescending(m => m.Date).GroupBy(m => m.Date.Date).OrderByDescending(g => g.Key);
 }
+
+<div class="matches-container">
+	@foreach (var dateGroup in groupedUpcoming)
+	{
+		<div class="mb-4 ">
+			<h5 class="text-black mb-3 border-bottom pb-2 position-relative">
+				@dateGroup.Key.ToString("dddd, MMMM dd, yyyy")
+				@if (dateGroup.Any(m => m.Competition == "playoff"))
+				{
+					<span class="position-absolute p-1 bg-warning border border-light rounded-circle" />
+				}
+			</h5>
+			@foreach (var match in dateGroup.OrderBy(m => m.Date))
+			{
+				@Html.Partial("_MatchRow", match)
+			}
+		</div>
+	}
+
+	@if (pastMatches.Any())
+	{
+		<div class="collapse" id="matches-collapse">
+			@foreach (var dateGroup in groupedPast)
+			{
+				<div class="mb-4">
+					<h5 class="text-black mb-3 border-bottom pb-2">
+						@dateGroup.Key.ToString("dddd, MMMM dd, yyyy")
+						@if (dateGroup.Any(m => m.Competition == "playoff"))
+						{
+							<small class="text-muted ms-2">Playoff</small>
+						}
+					</h5>
+					@foreach (var match in dateGroup.OrderBy(m => m.Date))
+					{
+						@Html.Partial("_MatchRow", match)
+					}
+				</div>
+			}
+		</div>
+
+		<div class="text-center py-3 mt-2" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#matches-collapse" aria-expanded="false">
+			<i class="bi bi-chevron-down text-muted matches-expand-icon"></i>
+			<span class="small text-muted matches-expand-text">Show More</span>
+		</div>
+	}
+</div>

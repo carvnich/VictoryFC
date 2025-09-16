@@ -35,6 +35,33 @@ body {
     border-bottom: 2px solid transparent !important;
 }
 
+#scorers-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+    #scorers-table th:nth-child(1) {
+        width: 50%;
+    }
+
+    #scorers-table th:nth-child(2) {
+        width: 30%;
+    }
+
+    #scorers-table th:nth-child(3) {
+        width: 20%;
+    }
+
+@media (max-width: 767.98px) {
+    #scorers-table th:nth-child(1) {
+        width: 70%;
+    }
+
+    #scorers-table th:nth-child(3) {
+        width: 30%;
+    }
+}
+
 .match-row.regular-season,
 .match-row.playoff {
     background-color: rgba(0, 0, 0, 0.05);

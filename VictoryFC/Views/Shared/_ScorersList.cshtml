@@ -1,22 +1,18 @@
 ﻿@model List<VictoryFC.Models.Scorer>
-
 <div class="table-responsive">
     <table class="table mb-0" id="scorers-table">
         <thead>
             <tr>
-                <th class="border-0 bg-white">#</th>
                 <th class="border-0 bg-white">Player</th>
                 <th class="border-0 bg-white d-none d-md-table-cell">Team</th>
                 <th class="border-0 bg-white text-center">Goals</th>
             </tr>
         </thead>
         <tbody>
-            @for (int i = 0; i < Model.Count; i++)
+            @for (int i = 0; i < Math.Min(6, Model.Count); i++)
             {
                 var scorer = Model[i];
                 var isVictoryFC = scorer.TeamName.Contains("VICTORY FC");
-
-                // Format name: First Last
                 var nameParts = scorer.PlayerName.Split(' ');
                 var formattedName = scorer.PlayerName;
                 if (nameParts.Length >= 2)
@@ -25,14 +21,46 @@
                     var lastName = nameParts.Last();
                     formattedName = $"{lastName} {firstName}";
                 }
-
                 <tr>
-                    <td class="border-0">@(i + 1)</td>
-                    <td class="border-0 @(isVictoryFC ? "text-vfc-red" : "")">@formattedName</td>
+                    <td class="border-0 @(isVictoryFC ? "text-vfc-red" : "text-dark")">
+                        @(i + 1) &nbsp; @formattedName
+                    </td>
                     <td class="border-0 d-none d-md-table-cell small text-muted">@scorer.TeamName</td>
                     <td class="border-0 text-center">@scorer.Goals</td>
                 </tr>
             }
         </tbody>
+        @if (Model.Count > 6)
+        {
+            <tbody class="collapse" id="scorers-collapse">
+                @for (int i = 6; i < Model.Count; i++)
+                {
+                    var scorer = Model[i];
+                    var isVictoryFC = scorer.TeamName.Contains("VICTORY FC");
+                    var nameParts = scorer.PlayerName.Split(' ');
+                    var formattedName = scorer.PlayerName;
+                    if (nameParts.Length >= 2)
+                    {
+                        var firstName = string.Join(" ", nameParts.Take(nameParts.Length - 1));
+                        var lastName = nameParts.Last();
+                        formattedName = $"{lastName} {firstName}";
+                    }
+                    <tr>
+                        <td class="border-0 @(isVictoryFC ? "text-vfc-red" : "text-dark")">
+                            @(i + 1) &nbsp; @formattedName
+                        </td>
+                        <td class="border-0 d-none d-md-table-cell small text-muted">@scorer.TeamName</td>
+                        <td class="border-0 text-center">@scorer.Goals</td>
+                    </tr>
+                }
+            </tbody>
+        }
     </table>
+    @if (Model.Count > 6)
+    {
+        <div class="text-center py-3" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#scorers-collapse" aria-expanded="false">
+            <i class="bi bi-chevron-down text-muted scorers-expand-icon"></i>
+            <span class="small text-muted ">Show More</span>
+        </div>
+    }
 </div>

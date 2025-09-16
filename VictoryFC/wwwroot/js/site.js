@@ -105,6 +105,9 @@ async function switchScorers() {
     const response = await fetch(`/Home/GetScorersPartial?competition=${select.value}`);
     const html = await response.text();
     document.getElementById('scorers-container').innerHTML = html;
+
+    // Re-initialize collapse functionality
+    initializeScorersCollapse();
 }
 
 async function switchCompetition() {
@@ -122,6 +125,9 @@ async function switchCompetition() {
     const victoryHtml = await victoryResponse.text();
     const victoryTab = document.getElementById('victory-matches');
     if (victoryTab) victoryTab.innerHTML = victoryHtml;
+
+    // Re-initialize collapse functionality
+    initializeMatchesCollapse();
 }
 
 function initializeTooltips() {
@@ -152,6 +158,47 @@ function initializeStandingsExpansion() {
     });
 }
 
+function initializeScorersCollapse() {
+    const scorersIcon = document.querySelector('.scorers-expand-icon');
+    const scorersText = document.querySelector('.scorers-expand-text');
+    const scorersCollapse = document.getElementById('scorers-collapse');
+
+    if (scorersIcon && scorersCollapse) {
+        scorersCollapse.addEventListener('show.bs.collapse', () => {
+            scorersIcon.className = 'bi bi-chevron-up text-muted scorers-expand-icon';
+            if (scorersText) scorersText.textContent = 'Show Less';
+        });
+
+        scorersCollapse.addEventListener('hide.bs.collapse', () => {
+            scorersIcon.className = 'bi bi-chevron-down text-muted scorers-expand-icon';
+            if (scorersText) scorersText.textContent = 'Show More';
+        });
+    }
+}
+
+function initializeMatchesCollapse() {
+    const matchesIcons = document.querySelectorAll('.matches-expand-icon');
+    const matchesTexts = document.querySelectorAll('.matches-expand-text');
+
+    matchesIcons.forEach((icon, index) => {
+        const targetId = icon.getAttribute('data-bs-target') || '#matches-collapse';
+        const matchesCollapse = document.querySelector(targetId);
+        const matchesText = matchesTexts[index];
+
+        if (matchesCollapse) {
+            matchesCollapse.addEventListener('show.bs.collapse', () => {
+                icon.className = 'bi bi-chevron-up text-muted matches-expand-icon';
+                if (matchesText) matchesText.textContent = 'Show Less';
+            });
+
+            matchesCollapse.addEventListener('hide.bs.collapse', () => {
+                icon.className = 'bi bi-chevron-down text-muted matches-expand-icon';
+                if (matchesText) matchesText.textContent = 'Show More';
+            });
+        }
+    });
+}
+
 function createScrollToTopButton() {
     const scrollButton = document.createElement('button');
     scrollButton.className = 'btn vfc-loss rounded-circle position-fixed';
@@ -179,6 +226,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initialize UI components
     initializeTooltips();
     initializeStandingsExpansion();
+    initializeScorersCollapse();
+    initializeMatchesCollapse();
     createScrollToTopButton();
 
     // Attach dropdown event listeners
