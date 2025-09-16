@@ -5,8 +5,8 @@
         public int Position { get; set; }
         public string Team { get; set; }
         public int P { get; set; } // Games played
-        public int W { get; set; } // Wins
-        public int D { get; set; } // Draws  
+        public int W { get; set; } // Wins  
+        public int D { get; set; } // Draws
         public int L { get; set; } // Losses
         public int GF { get; set; } // Goals for
         public int GA { get; set; } // Goals against

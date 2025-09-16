@@ -1,82 +1,82 @@
 ﻿@model List<VictoryFC.Models.Standing>
 
 <div class="table-responsive">
-    <table class="table mb-0" id="standings-table">
-        <thead>
-            <tr>
-                <th class="border-0 bg-white">Club</th>
-                <th class="border-0 bg-white text-center">GP</th>
-                <th class="border-0 bg-white text-center d-none d-md-table-cell">W</th>
-                <th class="border-0 bg-white text-center d-none d-md-table-cell">D</th>
-                <th class="border-0 bg-white text-center d-none d-md-table-cell">L</th>
-                <th class="border-0 bg-white text-center d-none d-md-table-cell">GF</th>
-                <th class="border-0 bg-white text-center d-none d-md-table-cell">GA</th>
-                <th class="border-0 bg-white text-center">+/-</th>
-                <th class="border-0 bg-white text-center">Pts</th>
-                <th class="border-0 bg-white text-center d-none d-lg-table-cell">Last 5</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var team in Model)
-            {
-                <tr class="rounded standings-row" data-team="@team.Team">
-                    <td class="text-dark border-0">
-                        @team.Position &nbsp;&nbsp; @team.Team
-                        <i class="bi bi-chevron-down d-md-none text-muted ms-2 expand-icon" style="font-size: 0.8rem;"></i>
-                    </td>
-                    <td class="text-center text-dark border-0">@team.P</td>
-                    <td class="text-center text-dark border-0 d-none d-md-table-cell">@team.W</td>
-                    <td class="text-center text-dark border-0 d-none d-md-table-cell">@team.D</td>
-                    <td class="text-center text-dark border-0 d-none d-md-table-cell">@team.L</td>
-                    <td class="text-center text-dark border-0 d-none d-md-table-cell">@team.GF</td>
-                    <td class="text-center text-dark border-0 d-none d-md-table-cell">@team.GA</td>
-                    <td class="text-center text-dark border-0">@(team.GD >= 0 ? "+" : "")@team.GD</td>
-                    <td class="text-center text-dark border-0">@team.Pts</td>
-                    <td class="text-center border-0 d-none d-lg-table-cell">
-                        @foreach (var match in team.LastFive)
-                        {
-                            <span class="d-inline-flex align-items-center justify-content-center rounded-circle me-1 match-result" style="width: 20px; height: 20px; background: @(match.IsWin ? "#24a700" : match.IsDraw ? "#6c757d" : "#ff0000")" data-bs-toggle="tooltip" title="@match.Opponent">
-                                <i class="bi @(match.IsWin ? "bi-check" : match.IsDraw ? "bi-dash" : "bi-x") text-white" style="display: flex; font-size:18px"></i>
-                            </span>
-                        }
-                    </td>
-                </tr>
-                <tr class="expanded-row d-md-none" style="display: none;">
-                    <td colspan="4" class="border-0 pt-0">
-                        <div class="bg-white rounded p-2 mt-1">
-                            <table class="table table-sm mb-0">
-                                <thead>
-                                    <tr>
-                                        <th class="border-0 bg-white text-center fw-bold">W</th>
-                                        <th class="border-0 bg-white text-center fw-bold">D</th>
-                                        <th class="border-0 bg-white text-center fw-bold">L</th>
-                                        <th class="border-0 bg-white text-center fw-bold">GF</th>
-                                        <th class="border-0 bg-white text-center fw-bold">GA</th>
-                                        <th class="border-0 bg-white text-center fw-bold">Last 5</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="text-center text-dark border-0">@team.W</td>
-                                        <td class="text-center text-dark border-0">@team.D</td>
-                                        <td class="text-center text-dark border-0">@team.L</td>
-                                        <td class="text-center text-dark border-0">@team.GF</td>
-                                        <td class="text-center text-dark border-0">@team.GA</td>
-                                        <td class="text-center text-dark border-0">
-                                            @foreach (var match in team.LastFive)
-                                            {
-                                                <span class="d-inline-flex align-items-center justify-content-center rounded-circle me-1 match-result" style="width: 18px; height: 18px; background: @(match.IsWin ? "#24a700" : match.IsDraw ? "#6c757d" : "#ff0000")" title="vs @match.Opponent">
-                                                    <i class="bi @(match.IsWin ? "bi-check" : match.IsDraw ? "bi-dash" : "bi-x") text-white" style="font-size: 12px;"></i>
-                                                </span>
-                                            }
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+	<table class="table mb-0" id="standings-table">
+		<thead>
+			<tr>
+				<th class="border-0 bg-white">Club</th>
+				<th class="border-0 bg-white text-center">GP</th>
+				<th class="border-0 bg-white text-center d-none d-md-table-cell">W</th>
+				<th class="border-0 bg-white text-center d-none d-md-table-cell">D</th>
+				<th class="border-0 bg-white text-center d-none d-md-table-cell">L</th>
+				<th class="border-0 bg-white text-center d-none d-md-table-cell">GF</th>
+				<th class="border-0 bg-white text-center d-none d-md-table-cell">GA</th>
+				<th class="border-0 bg-white text-center">+/-</th>
+				<th class="border-0 bg-white text-center">Pts</th>
+				<th class="border-0 bg-white text-center d-none d-lg-table-cell">Last 5</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var team in Model)
+			{
+				<tr class="rounded standings-row" data-team="@team.Team">
+					<td class="text-dark border-0">
+						@team.Position &nbsp; @team.Team
+						<i class="bi bi-chevron-down d-md-none text-muted ms-0 expand-icon" style="font-size: 0.6rem;"></i>
+					</td>
+					<td class="text-center text-dark border-0">@team.P</td>
+					<td class="text-center text-dark border-0 d-none d-md-table-cell">@team.W</td>
+					<td class="text-center text-dark border-0 d-none d-md-table-cell">@team.D</td>
+					<td class="text-center text-dark border-0 d-none d-md-table-cell">@team.L</td>
+					<td class="text-center text-dark border-0 d-none d-md-table-cell">@team.GF</td>
+					<td class="text-center text-dark border-0 d-none d-md-table-cell">@team.GA</td>
+					<td class="text-center text-dark border-0">@(team.GD >= 0 ? "+" : "")@team.GD</td>
+					<td class="text-center text-dark border-0">@team.Pts</td>
+					<td class="text-center border-0 d-none d-lg-table-cell">
+						@foreach (var match in team.LastFive)
+						{
+							<span class="d-inline-flex align-items-center justify-content-center rounded-circle match-result text-white" style="width: 22px; height: 22px; background: @(match.IsWin ? "#24a700" : match.IsDraw ? "#6c757d" : "#df2c30")" data-bs-toggle="tooltip" title="@match.Opponent">
+								@(match.IsWin ? "W" : match.IsDraw ? "D" : "L")
+							</span>
+						}
+					</td>
+				</tr>
+				<tr class="expanded-row d-md-none" style="display: none;">
+					<td colspan="4" class="border-0 pt-0">
+						<div class="bg-white rounded p-2 mt-1">
+							<table class="table table-sm mb-0">
+								<thead>
+									<tr>
+										<th class="border-0 bg-white text-center fw-bold">W</th>
+										<th class="border-0 bg-white text-center fw-bold">D</th>
+										<th class="border-0 bg-white text-center fw-bold">L</th>
+										<th class="border-0 bg-white text-center fw-bold">GF</th>
+										<th class="border-0 bg-white text-center fw-bold">GA</th>
+										<th class="border-0 bg-white text-center fw-bold">Last 5</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="text-center text-dark border-0">@team.W</td>
+										<td class="text-center text-dark border-0">@team.D</td>
+										<td class="text-center text-dark border-0">@team.L</td>
+										<td class="text-center text-dark border-0">@team.GF</td>
+										<td class="text-center text-dark border-0">@team.GA</td>
+										<td class="text-center text-dark border-0">
+											@foreach (var match in team.LastFive)
+											{
+												<span class="d-inline-flex align-items-center justify-content-center rounded-circle match-result text-white" style="width: 18px; height: 18px; background: @(match.IsWin ? "#24a700" : match.IsDraw ? "#6c757d" : "#df2c30"); font-size: 10px;" title="vs @match.Opponent">
+													@(match.IsWin ? "W" : match.IsDraw ? "D" : "L")
+												</span>
+											}
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 </div>

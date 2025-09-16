@@ -1,32 +1,32 @@
 ﻿@model VictoryFC.Models.Match
 
 <div class="row align-items-center p-1 p-md-2 m-1 m-md-2 rounded match-row @Model.CompetitionClass">
-    <div class="col-4 col-md-4 text-end">
-        <span class="fw-bold @((Model.HomeTeam == "Victory FC") ? "text-danger" : "")">@Model.HomeTeam</span>
-    </div>
-    <div class="col-4 col-md-4 text-center">
-        @if (Model.IsCompleted)
-        {
-            <div class="d-flex align-items-center justify-content-center">
-                <span class="fs-4 fw-bold me-2">@Model.HomeScore</span>
-                <span class="text-muted">-</span>
-                <span class="fs-4 fw-bold ms-2">@Model.AwayScore</span>
-            </div>
-            <div class="small text-muted">
-                <div>@Model.FormattedTime</div>
-                <div class="d-none d-md-block">@Model.Field</div>
-            </div>
-        }
-        else
-        {
-            <div class="mb-0 fw-bold">vs</div>
-            <div class="small text-muted">
-                <div>@Model.FormattedTime</div>
-                <div class="d-none d-md-block">@Model.Field</div>
-            </div>
-        }
-    </div>
-    <div class="col-4 col-md-4">
-        <span class="fw-bold @((Model.AwayTeam == "Victory FC") ? "text-danger" : "")">@Model.AwayTeam</span>
-    </div>
+	<div class="col-4 col-md-4 text-end">
+		<span class="@((Model.HomeTeam == "Victory FC") ? "text-vfc-red" : "")">@Model.HomeTeam</span>
+	</div>
+	<div class="col-4 col-md-4 text-center">
+		@if (Model.IsCompleted)
+		{
+			<div class="d-flex align-items-center justify-content-center">
+				<span class="fs-4 me-2">@Model.HomeScore</span>
+				<span class="text-muted">-</span>
+				<span class="fs-4 ms-2">@Model.AwayScore</span>
+			</div>
+			<div class="small text-muted">
+				<div>@Model.FormattedTime</div>
+				<div class="d-none d-md-block">@Model.Field</div>
+			</div>
+		}
+		else
+		{
+			<div class="mb-0">vs</div>
+			<div class="small text-muted">
+				<div>@Model.FormattedTime</div>
+				<div class="d-none d-md-block">@Model.Field</div>
+			</div>
+		}
+	</div>
+	<div class="col-4 col-md-4">
+		<span class="@((Model.AwayTeam == "Victory FC") ? "text-vfc-red" : "")">@Model.AwayTeam</span>
+	</div>
 </div>

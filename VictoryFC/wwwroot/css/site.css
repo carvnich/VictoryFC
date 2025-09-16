@@ -1,13 +1,29 @@
 html {
     position: relative;
     min-height: 100%;
+    scroll-behavior: smooth;
 }
 
 body {
     margin-bottom: 60px;
 }
 
-/* Purple underline for active nav pills */
+.text-vfc-red {
+    color: #df2c30;
+}
+
+.vfc-win {
+    background-color: #24a700 !important;
+}
+
+.vfc-draw {
+    background-color: #6c757d !important;
+}
+
+.vfc-loss {
+    background-color: #df2c30 !important;
+}
+
 .nav-pills .nav-link.active {
     background: none !important;
     border-bottom: 3px solid #ff0000 !important;
@@ -19,44 +35,69 @@ body {
     border-bottom: 2px solid transparent !important;
 }
 
-/* Match result hover effect */
-/*.match-result:hover {
-    transform: scale(1.1);
-    transition: transform 0.1s;
-}*/
-
-/* Competition-based backgrounds */
-.match-row.regular-season {
-    background-color: rgb(0, 0, 0, 0.05);
+.match-row.regular-season,
+.match-row.playoff {
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 .match-row.spence-cup {
-    background-color: rgb(255, 0, 0, 0.05);
+    background-color: rgba(255, 0, 0, 0.05);
 }
 
-/* Leaflet map styling - CRITICAL for map display */
+@media (max-width: 991.98px) {
+    .navbar-nav .nav-item {
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.75rem 1rem;
+    }
+}
+
 #map {
     height: 300px;
     width: 100%;
     z-index: 1;
 }
 
-/* Custom Leaflet map marker */
-.custom-map-marker {
-    background: none !important;
-    border: none !important;
-    text-align: center;
-}
-
-    .custom-map-marker i {
-        filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+@media (max-width: 575.98px) {
+    .card-body {
+        padding: 1rem 0.75rem;
     }
 
-/* Leaflet popup styling */
-.leaflet-popup-content-wrapper {
-    border-radius: 8px;
+    .container {
+        padding: 0 0.75rem;
+    }
+
+    .table-responsive, 
+    .match-row {
+        font-size: 0.875rem;
+    }
 }
 
-.leaflet-popup-content {
-    font-family: 'Poppins', sans-serif;
+.text-victory-fc {
+    color: #dc3545 !important;
+}
+
+.standings-row:hover,
+#scorers-table tbody tr:hover {
+    background-color: rgba(0,0,0,0.02);
+}
+
+.shop-item-card {
+    transition: transform 0.2s ease;
+}
+
+    .shop-item-card:hover {
+        transform: translateY(-2px);
+    }
+
+.btn-scroll-top {
+    position: fixed !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    width: 50px !important;
+    height: 50px !important;
+    z-index: 1000 !important;
+    transition: opacity 0.3s ease !important;
 }

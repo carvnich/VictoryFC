@@ -51,6 +51,9 @@ namespace VictoryFC.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int?>("GameNumber")
+                        .HasColumnType("int");
+
                     b.Property<int?>("HomeScore")
                         .HasColumnType("int");
 
@@ -59,8 +62,9 @@ namespace VictoryFC.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("bit");
+                    b.Property<string>("Round")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 

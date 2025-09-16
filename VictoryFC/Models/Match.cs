@@ -6,26 +6,25 @@ namespace VictoryFC.Models
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-
-        [Required, MaxLength(100)]
-        public string Field { get; set; }
-
-        [Required, MaxLength(50)]
-        public string HomeTeam { get; set; }
+        [Required, MaxLength(100)] public string Field { get; set; }
+        [Required, MaxLength(50)] public string HomeTeam { get; set; }
         public int? HomeScore { get; set; }
-
-        [Required, MaxLength(50)]
-        public string AwayTeam { get; set; }
+        [Required, MaxLength(50)] public string AwayTeam { get; set; }
         public int? AwayScore { get; set; }
-        public bool IsCompleted { get; set; }
+        [MaxLength(20)] public string Competition { get; set; } = "regular"; // regular, spence, playoff
+        [MaxLength(50)] public string? Round { get; set; } // quarterfinal, semifinal, final
+        public int? GameNumber { get; set; } // For tracking playoff games
 
-        [MaxLength(20)]
-        public string Competition { get; set; } = "regular";
-
-        // Computed properties (not stored in DB)
-        public string Result => IsCompleted ? $"{HomeScore} : {AwayScore}" : "vs";
+        // Computed properties
+        public bool IsCompleted => HomeScore.HasValue && AwayScore.HasValue;
         public string FormattedDate => Date.ToString("MMM dd, yyyy");
         public string FormattedTime => Date.ToString("h:mm tt");
-        public string CompetitionClass => Competition == "spence" ? "spence-cup" : "regular-season";
+        public string CompetitionClass => Competition switch
+        {
+            "spence" => "spence-cup",
+            "playoff" => "playoff",
+            _ => "regular-season"
+        };
+        public string? WinnerTeam => IsCompleted && HomeScore != AwayScore ? (HomeScore > AwayScore ? HomeTeam : AwayTeam) : null;
     }
 }

@@ -1,68 +1,63 @@
-﻿// VictoryFC - Simplified functionality
-
+﻿// Global variables
 let map;
 
-// Initialize Leaflet Map
+function scrollToSection(sectionId) {
+    const element = document.getElementById(sectionId);
+    if (element) {
+        const navbar = document.querySelector('.navbar');
+        const offset = navbar ? navbar.offsetHeight + 20 : 80;
+
+        window.scrollTo({
+            top: element.offsetTop - offset,
+            behavior: 'smooth'
+        });
+
+        // Close mobile navbar
+        const navbarCollapse = document.getElementById('navbarNav');
+        if (navbarCollapse?.classList.contains('show')) {
+            bootstrap.Collapse.getInstance(navbarCollapse)?.hide();
+        }
+    }
+}
+
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function initMap() {
     const mapElement = document.getElementById('map');
     if (!mapElement) return;
 
     const location = mapElement.getAttribute('data-location');
     const fieldName = mapElement.getAttribute('data-field');
-    const coordinates = getLocationCoordinates(location);
+    const coords = { lat: 43.2081, lng: -79.7381 }; // Heritage Green default
 
-    if (coordinates) {
-        map = L.map('map').setView([coordinates.lat, coordinates.lng], 15);
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
+    map = L.map('map').setView([coords.lat, coords.lng], 15);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
 
-        const customIcon = L.divIcon({
-            className: 'custom-map-marker',
-            html: '<i class="bi bi-geo-alt-fill text-danger" style="font-size: 2rem;"></i>',
-            iconSize: [30, 30],
-            iconAnchor: [15, 30]
-        });
+    // Custom Victory FC red marker
+    const redIcon = L.divIcon({
+        className: 'custom-map-marker',
+        html: '<i class="bi bi-geo-alt-fill" style="color: #df2c30; font-size: 2rem; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));"></i>',
+        iconSize: [30, 30],
+        iconAnchor: [15, 30]
+    });
 
-        L.marker([coordinates.lat, coordinates.lng], { icon: customIcon })
-            .addTo(map)
-            .bindPopup(`<b>${fieldName}</b><br>${location}`)
-            .openPopup();
-    } else {
-        mapElement.innerHTML = `
-            <div class="bg-light rounded d-flex align-items-center justify-content-center h-100">
-                <div class="text-muted text-center">
-                    <i class="bi bi-map display-3"></i>
-                    <p class="mt-3 mb-0">Stadium Location Map</p>
-                    <small class="text-muted">${fieldName}</small>
-                </div>
-            </div>`;
-    }
+    L.marker([coords.lat, coords.lng], { icon: redIcon })
+        .addTo(map)
+        .bindPopup(`<b>${fieldName}</b><br>${location}`)
+        .openPopup();
 }
 
-function getLocationCoordinates(location) {
-    const locations = {
-        "355 First Rd W, Stoney Creek, ON L8E 0G5": { lat: 43.2081, lng: -79.7381 },
-        "135 Fennell Ave W, Hamilton, ON L9C 1E9": { lat: 43.2501, lng: -79.9181 },
-        "1145 Stone Church Rd E, Hamilton, ON L8W 3J6": { lat: 43.2067, lng: -79.7789 },
-        "1500 Shaver Rd, Ancaster, ON L9G 3K9": { lat: 43.2189, lng: -79.9892 },
-        "363 Wilson St E, Ancaster, ON L9G 2B8": { lat: 43.2167, lng: -79.9667 },
-        "65 Herkimer St, Hamilton, ON L8P 2G5": { lat: 43.2557, lng: -79.8711 },
-        "316 Sackville Hill Lane, Lower Sackville, NS B4C 2R9": { lat: 44.7761, lng: -63.6739 }
-    };
-    return locations[location] || null;
-}
-
-// Match countdown
 function updateCountdown() {
     const countdown = document.getElementById('countdown');
     if (!countdown) return;
 
-    const target = countdown.getAttribute('data-target');
-    if (!target) return;
-
-    const distance = new Date(target).getTime() - new Date().getTime();
+    const target = new Date(countdown.getAttribute('data-target')).getTime();
+    const now = new Date().getTime();
+    const distance = target - now;
 
     if (distance > 0) {
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -79,43 +74,68 @@ function updateCountdown() {
     }
 }
 
-// Switch division standings
+async function handleDropdownChange(selectId, targetContainer, endpoint) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+
+    const response = await fetch(`/Home/GetPartial?type=${endpoint}&value=${select.value}`);
+    const html = await response.text();
+
+    const container = document.querySelector(targetContainer);
+    if (container) container.outerHTML = html;
+}
+
 async function switchDivision() {
     const select = document.getElementById('division-select');
     if (!select) return;
 
     const response = await fetch(`/Home/GetStandingsPartial?division=${select.value}`);
     const html = await response.text();
-
     document.querySelector('.table-responsive').outerHTML = html;
+
+    // Re-initialize after AJAX update
     initializeTooltips();
     initializeStandingsExpansion();
 }
 
-// Switch competition matches
+async function switchScorers() {
+    const select = document.getElementById('scorers-select');
+    if (!select) return;
+
+    const response = await fetch(`/Home/GetScorersPartial?competition=${select.value}`);
+    const html = await response.text();
+    document.getElementById('scorers-container').innerHTML = html;
+}
+
 async function switchCompetition() {
     const select = document.getElementById('competition-select');
     if (!select) return;
 
-    const response = await fetch(`/Matches/GetMatchesPartial?competition=${select.value}`);
-    const html = await response.text();
-
+    // Update all matches tab
+    const allResponse = await fetch(`/Home/GetMatchesPartial?competition=${select.value}`);
+    const allHtml = await allResponse.text();
     const allTab = document.getElementById('all-matches');
-    if (allTab) allTab.innerHTML = html;
+    if (allTab) allTab.innerHTML = allHtml;
 
-    // Get Victory FC filtered matches
-    const victoryResponse = await fetch(`/Matches/GetMatchesPartial?competition=${select.value}&filter=victory`);
+    // Update Victory FC matches tab
+    const victoryResponse = await fetch(`/Home/GetMatchesPartial?competition=${select.value}&filter=victory`);
     const victoryHtml = await victoryResponse.text();
-
     const victoryTab = document.getElementById('victory-matches');
     if (victoryTab) victoryTab.innerHTML = victoryHtml;
 }
 
-// Initialize mobile standings expansion
+function initializeTooltips() {
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(tooltip => {
+        const existing = bootstrap.Tooltip.getInstance(tooltip);
+        if (existing) existing.dispose(); // Clean up existing tooltips
+        new bootstrap.Tooltip(tooltip);
+    });
+}
+
 function initializeStandingsExpansion() {
     document.querySelectorAll('.standings-row').forEach(row => {
         row.addEventListener('click', function () {
-            if (window.innerWidth >= 768) return;
+            if (window.innerWidth >= 768) return; // Only on mobile
 
             const expandedRow = row.nextElementSibling;
             const expandIcon = row.querySelector('.expand-icon');
@@ -124,42 +144,45 @@ function initializeStandingsExpansion() {
                 const isExpanded = expandedRow.style.display !== 'none';
 
                 expandedRow.style.display = isExpanded ? 'none' : 'table-row';
-                expandIcon.className = `bi ${isExpanded ? 'bi-chevron-down' : 'bi-chevron-up'} d-md-none text-muted ms-2 expand-icon`;
+                if (expandIcon) {
+                    expandIcon.className = `bi ${isExpanded ? 'bi-chevron-down' : 'bi-chevron-up'} d-md-none text-muted ms-0 expand-icon`;
+                }
             }
         });
     });
 }
 
-// Initialize tooltips
-function initializeTooltips() {
-    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(tooltip => {
-        const existing = bootstrap.Tooltip.getInstance(tooltip);
-        if (existing) existing.dispose();
-        new bootstrap.Tooltip(tooltip);
+function createScrollToTopButton() {
+    const scrollButton = document.createElement('button');
+    scrollButton.className = 'btn btn-danger rounded-circle position-fixed';
+    scrollButton.style.cssText = 'bottom: 20px; right: 20px; width: 50px; height: 50px; z-index: 1000; display: none;';
+    scrollButton.innerHTML = '<i class="bi bi-arrow-up"></i>';
+    scrollButton.onclick = scrollToTop;
+    document.body.appendChild(scrollButton);
+
+    // Show/hide scroll button based on scroll position
+    window.addEventListener('scroll', () => {
+        scrollButton.style.display = window.pageYOffset > 300 ? 'block' : 'none';
     });
 }
 
-// Initialize everything on page load
 document.addEventListener('DOMContentLoaded', function () {
-    // Map initialization
-    if (document.getElementById('map')) {
-        setTimeout(() => {
-            if (typeof L !== 'undefined') initMap();
-        }, 500);
-    }
-
-    // Countdown
+    // Initialize countdown timer
     updateCountdown();
     setInterval(updateCountdown, 1000);
+
+    // Initialize map if available
+    if (document.getElementById('map') && typeof L !== 'undefined') {
+        setTimeout(initMap, 500);
+    }
 
     // Initialize UI components
     initializeTooltips();
     initializeStandingsExpansion();
+    createScrollToTopButton();
 
-    // Event listeners
+    // Attach dropdown event listeners
     document.getElementById('division-select')?.addEventListener('change', switchDivision);
+    document.getElementById('scorers-select')?.addEventListener('change', switchScorers);
     document.getElementById('competition-select')?.addEventListener('change', switchCompetition);
-
-    // Auto refresh standings every 5 minutes
-    setInterval(switchDivision, 5 * 60 * 1000);
 });

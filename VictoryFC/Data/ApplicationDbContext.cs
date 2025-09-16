@@ -7,7 +7,6 @@ namespace VictoryFC.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        // New simplified tables
         public DbSet<Match> Matches { get; set; }
         public DbSet<Scorer> Scorers { get; set; }
         public DbSet<User> Users { get; set; }

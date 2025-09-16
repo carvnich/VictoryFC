@@ -5,8 +5,8 @@
 }
 
 <div class="card border shadow">
-	<!-- Hero Section with Match Countdown -->
-	<div class="card-body bg-primary text-white position-relative overflow-hidden team-form-@Model.FormClass" style="background-image: url('/images/herobg.jpg'); background-size: cover; background-position: center;">
+	<!-- Hero Section -->
+	<div id="hero" class="card-body bg-primary text-white position-relative overflow-hidden" style="background-image: url('/images/herobg.jpg'); background-size: cover; background-position: center;">
 		<div class="position-absolute top-0 start-0 w-100 h-100 bg-dark" style="opacity: 0.5;"></div>
 		<div class="position-relative">
 			<div class="row align-items-center h-100">
@@ -14,18 +14,18 @@
 					<div class="text-center py-4">
 						@if (Model.NextMatch != null)
 						{
-							<h1 class="mb-4 fw-bold fs-2 fs-md-1">@Model.NextMatch.HomeTeam vs @Model.NextMatch.AwayTeam</h1>
-							<div class="d-flex justify-content-center align-items-start gap-1 gap-md-2 mb-4" id="countdown" data-target="@Model.CountdownTarget">
-								<div class="text-center"><div class="display-6 display-md-5 fw-bold" id="days">00</div><small class="d-block">Days</small></div>
+							<h1 class="mb-4 fw-bold">@Model.NextMatch.HomeTeam vs @Model.NextMatch.AwayTeam</h1>
+							<div class="d-flex justify-content-center align-items-start gap-2 mb-4" id="countdown" data-target="@Model.CountdownTarget">
+								<div class="text-center"><div class="display-6 fw-bold" id="days">00</div><small class="d-block">Days</small></div>
 								<div class="display-6 fw-bold">:</div>
-								<div class="text-center"><div class="display-6 display-md-5 fw-bold" id="hours">00</div><small class="d-block">Hours</small></div>
+								<div class="text-center"><div class="display-6 fw-bold" id="hours">00</div><small class="d-block">Hours</small></div>
 								<div class="display-6 fw-bold">:</div>
-								<div class="text-center"><div class="display-6 display-md-5 fw-bold" id="minutes">00</div><small class="d-block">Minutes</small></div>
+								<div class="text-center"><div class="display-6 fw-bold" id="minutes">00</div><small class="d-block">Minutes</small></div>
 								<div class="display-6 fw-bold">:</div>
-								<div class="text-center"><div class="display-6 display-md-5 fw-bold" id="seconds">00</div><small class="d-block">Seconds</small></div>
+								<div class="text-center"><div class="display-6 fw-bold" id="seconds">00</div><small class="d-block">Seconds</small></div>
 							</div>
 							<div class="mb-3">
-								<p class="mb-2 fs-6 fs-md-5"><i class="bi bi-calendar me-2"></i>@Model.NextMatch.FormattedDate at @Model.NextMatch.FormattedTime</p>
+								<p class="mb-2"><i class="bi bi-calendar me-2"></i>@Model.NextMatch.FormattedDate at @Model.NextMatch.FormattedTime</p>
 								<p class="mb-2"><i class="bi bi-geo-alt me-2"></i>@Model.NextMatch.Field</p>
 								<p class="mb-0"><small>@Model.NextMatchLocation</small></p>
 							</div>
@@ -38,7 +38,7 @@
 					</div>
 				</div>
 				<div class="col-lg-6">
-					<div class="p-2 p-md-4">
+					<div class="p-4">
 						@if (Model.NextMatch != null)
 						{
 							<div class="bg-white rounded shadow-sm p-2">
@@ -52,7 +52,7 @@
 								<div class="row text-center text-dark">
 									<div class="col-3"><div class="fw-bold fs-4 text-success">@Model.Stats.Wins</div><small>Wins</small></div>
 									<div class="col-3"><div class="fw-bold fs-4 text-warning">@Model.Stats.Draws</div><small>Draws</small></div>
-									<div class="col-3"><div class="fw-bold fs-4 text-danger">@Model.Stats.Losses</div><small>Losses</small></div>
+									<div class="col-3"><div class="fw-bold fs-4 text-vfc-red">@Model.Stats.Losses</div><small>Losses</small></div>
 									<div class="col-3"><div class="fw-bold fs-4 text-primary">@Model.Stats.Points</div><small>Points</small></div>
 								</div>
 								<div class="mt-3 text-center text-dark">
@@ -67,49 +67,120 @@
 		</div>
 	</div>
 
-	<hr class="mx-auto rounded" style="width: 90%; height: 4px; background-color: #e9ecef; opacity: 1; border: none;">
+	<hr class="mx-auto" style="width: 90%; height: 2px; background-color: #e9ecef; border: none;">
+
+	<!-- Standings Section -->
+	<div id="standings" class="card-body">
+		<div class="row align-items-center mb-3">
+			<div class="col-md-6">
+				<h3 class="mb-2 mb-md-0"><i class="bi bi-table me-2"></i>Standings</h3>
+			</div>
+			<div class="col-md-6">
+				<div class="d-flex justify-content-md-end">
+					<select class="form-select w-auto" id="division-select">
+						<option value="regular" selected>Division 3</option>
+						<option value="spence">Spence Cup</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		@Html.Partial("_StandingsTable", Model.Standings)
+	</div>
+
+	<hr class="mx-auto" style="width: 90%; height: 2px; background-color: #e9ecef; border: none;">
+
+	<!-- Scorers Section -->
+	<div id="scorers" class="card-body">
+		<div class="row align-items-center mb-3">
+			<div class="col-md-6">
+				<h3 class="mb-2 mb-md-0"><i class="bi bi-trophy-fill me-2"></i>Top Scorers</h3>
+			</div>
+			<div class="col-md-6">
+				<div class="d-flex justify-content-md-end">
+					<select class="form-select w-auto" id="scorers-select">
+						<option value="regular" selected>Division 3</option>
+						<option value="spence">Spence Cup</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div id="scorers-container">@Html.Partial("_ScorersList", Model.RegularScorers)</div>
+	</div>
+
+	<hr class="mx-auto" style="width: 90%; height: 2px; background-color: #e9ecef; border: none;">
+
+	<!-- Matches Section -->
+	<div id="matches" class="card-body">
+		<div class="row align-items-center mb-3">
+			<div class="col-md-6">
+				<h3 class="mb-2 mb-md-0"><i class="bi bi-calendar-event me-2"></i>Matches</h3>
+			</div>
+			<div class="col-md-6">
+				<div class="d-flex justify-content-md-end">
+					<select class="form-select w-auto" id="competition-select">
+						<option value="all" selected>All Competitions</option>
+						<option value="regular">Division 3</option>
+						<option value="spence">Spence Cup</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<ul class="nav nav-pills mb-4" role="tablist">
+			<li class="nav-item">
+				<button class="nav-link text-black active" data-bs-toggle="pill" data-bs-target="#all-matches">
+					<i class="bi bi-list-ul me-1 d-none d-sm-inline"></i>All Matches
+				</button>
+			</li>
+			<li class="nav-item">
+				<button class="nav-link text-black" data-bs-toggle="pill" data-bs-target="#victory-matches">
+					<i class="bi bi-trophy me-1 d-none d-sm-inline"></i>Victory FC
+				</button>
+			</li>
+		</ul>
+
+		<div class="tab-content">
+			<div class="tab-pane fade show active" id="all-matches">
+				@{
+					var allMatches = Model.AllMatches.OrderByDescending(m => m.Date).GroupBy(m => m.Date.Date).OrderByDescending(g => g.Key);
+				}
+				@Html.Partial("_MatchesList", allMatches)
+			</div>
+
+			<div class="tab-pane fade" id="victory-matches">
+				@{
+					var victoryMatches = Model.VictoryMatches.OrderByDescending(m => m.Date).GroupBy(m => m.Date.Date).OrderByDescending(g => g.Key);
+				}
+				@Html.Partial("_MatchesList", victoryMatches)
+			</div>
+		</div>
+	</div>
+
+	<hr class="mx-auto" style="width: 90%; height: 2px; background-color: #e9ecef; border: none;">
 
 	<!-- Shop Section -->
-	<div class="card-body" style="background-image: '~/images/gear/manrocketlogo.png'; background-size: cover; background-position: center;">
-		<h3 class="card-title mb-4"><img src="~/images/gear/manrocketlogo.png" alt="Man Rocket Logo" height="55" class="rounded-circle pe-2" />Shop</h3>
-		<div class="row g-2">
-			@for (int i = 0; i < 6 && i < Model.ShopItems.Count; i++)
+	<div id="shop" class="card-body">
+		<h3 class="mb-4">
+			<img src="~/images/gear/manrocketlogo.png" alt="Man Rocket Logo" height="55" class="rounded-circle me-2" />Shop
+		</h3>
+		<div class="row g-3">
+			@foreach (var item in Model.ShopItems)
 			{
-				var item = Model.ShopItems[i];
-				<div class="col-lg-2 col-md-4 col-6">
+				<div class="col-6 col-md-4 col-lg-3">
 					<a href="@item.Url" target="_blank" class="text-decoration-none">
-						<div class="card border shadow-sm h-100">
-							<div class="d-flex align-items-center justify-content-center" style="height:120px;">
-								<img src=@item.Image alt=@item.Name height="120" class="" />
+						<div class="card border shadow-sm h-100 shop-item-card">
+							<div class="d-flex align-items-center justify-content-center p-3" style="min-height:120px;">
+								<img src="@item.Image" alt="@item.Name" class="img-fluid" style="max-height:100px;" />
 							</div>
 							<div class="card-body text-center p-2">
 								<h6 class="card-title mb-1 small">@item.Name</h6>
-								<p class="text-muted small mb-1" style="font-size: 0.75rem;">@item.Description</p>
-								<p class="fw-bold text-danger mb-0 small">@item.Price</p>
+								<p class="text-muted small mb-1">@item.Description</p>
+								<p class="fw-bold text-vfc-red mb-0">@item.Price</p>
 							</div>
 						</div>
 					</a>
 				</div>
 			}
 		</div>
-	</div>
-
-	<hr class="mx-auto rounded" style="width: 90%; height: 4px; background-color: #e9ecef; opacity: 1; border: none;">
-
-	<!-- Standings Section -->
-	<div class="card-body">
-		<div class="row align-items-center mb-3">
-			<div class="col">
-				<h3 class="card-title mb-0"><i class="bi bi-table me-2"></i>Standings</h3>
-			</div>
-			<div class="col-auto">
-				<select class="form-select me-2" id="division-select">
-					<option value="regular" selected>Division 3</option>
-					<option value="spence">Spence Cup</option>
-				</select>
-			</div>
-		</div>
-
-		@Html.Partial("_StandingsTable", Model.Standings)
 	</div>
 </div>

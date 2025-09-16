@@ -4,13 +4,17 @@ namespace VictoryFC.Services
 {
     public interface IMatchService
     {
+        // Core data retrieval
         Task<List<Standing>> GetStandingsAsync(string division = "regular");
-        Task<Match> GetNextMatchAsync();
-        Task<List<Match>> GetRecentMatchesAsync(int count = 5);
-        Task<List<Match>> GetAllMatchesAsync();
-        Task<List<Match>> GetMatchesByCompetitionAsync(string competition = "all");
+        Task<List<Scorer>> GetTopScorersAsync(string competition = "regular");
+        Task<List<Match>> GetMatchesAsync(string competition = "all", string filter = "all");
+        Task<Match?> GetNextMatchAsync();
         Task<SeasonStats> GetSeasonStatsAsync();
-        Task<string> GetNextMatchLocationAsync();
-        Task<List<Scorer>> GetTopScorersAsync(string competition = "regular", int count = 10);
+
+        // Match management
+        Task UpdateMatchScoreAsync(int matchId, int homeScore, int awayScore);
+
+        // Utility
+        string GetLocationAddress(string? field);
     }
 }
