@@ -154,7 +154,7 @@ function initializeStandingsExpansion() {
 
 function createScrollToTopButton() {
     const scrollButton = document.createElement('button');
-    scrollButton.className = 'btn btn-danger rounded-circle position-fixed';
+    scrollButton.className = 'btn vfc-loss rounded-circle position-fixed';
     scrollButton.style.cssText = 'bottom: 20px; right: 20px; width: 50px; height: 50px; z-index: 1000; display: none;';
     scrollButton.innerHTML = '<i class="bi bi-arrow-up"></i>';
     scrollButton.onclick = scrollToTop;

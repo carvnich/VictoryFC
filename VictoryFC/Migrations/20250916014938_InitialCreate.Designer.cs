@@ -12,7 +12,7 @@ using VictoryFC.Data;
 namespace VictoryFC.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250916002436_InitialCreate")]
+    [Migration("20250916014938_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

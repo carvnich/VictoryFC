@@ -94,10 +94,10 @@ namespace VictoryFC.Data
                 new() { Date = new DateTime(2025, 9, 3, 19, 0, 0), Field = "Mohawk 2", HomeTeam = "United FC", HomeScore = 2, AwayTeam = "Victory FC", AwayScore = 3, Competition = "spence" },
 
                 // Playoff Matches
-                new() { Date = new DateTime(2025, 9, 21, 9, 0, 0), Field = "Heritage Green #2", HomeTeam = "Victory FC", AwayTeam = "Azzurri", Competition = "playoff", Round = "quarterfinal", GameNumber = 1 },
+                new() { Date = new DateTime(2025, 9, 21, 9, 0, 0), Field = "Heritage Green #2", HomeTeam = "Victory FC", AwayTeam = "Azzurri ST", Competition = "playoff", Round = "quarterfinal", GameNumber = 1 },
                 new() { Date = new DateTime(2025, 9, 21, 11, 0, 0), Field = "Heritage Green #2", HomeTeam = "Proto 3", AwayTeam = "United FC", Competition = "playoff", Round = "quarterfinal", GameNumber = 2 },
-                new() { Date = new DateTime(2025, 9, 21, 9, 0, 0), Field = "Heritage Green #5", HomeTeam = "West Hamilton UTD", AwayTeam = "Proto 4", Competition = "playoff", Round = "quarterfinal", GameNumber = 3 },
-                new() { Date = new DateTime(2025, 9, 21, 11, 0, 0), Field = "Heritage Green #5", HomeTeam = "Hamilton Serbian", AwayTeam = "SOI Inter", Competition = "playoff", Round = "quarterfinal", GameNumber = 4 },
+                new() { Date = new DateTime(2025, 9, 21, 9, 0, 0), Field = "Heritage Green #5", HomeTeam = "West Hamilton United 89", AwayTeam = "Proto 4", Competition = "playoff", Round = "quarterfinal", GameNumber = 3 },
+                new() { Date = new DateTime(2025, 9, 21, 11, 0, 0), Field = "Heritage Green #5", HomeTeam = "Hamilton Serbian United", AwayTeam = "Sons of Italy Inter", Competition = "playoff", Round = "quarterfinal", GameNumber = 4 },
                 new() { Date = new DateTime(2025, 9, 28, 9, 0, 0), Field = "Heritage Green #5", HomeTeam = "TBD", AwayTeam = "TBD", Competition = "playoff", Round = "semifinal", GameNumber = 5 },
                 new() { Date = new DateTime(2025, 9, 28, 11, 0, 0), Field = "Heritage Green #5", HomeTeam = "TBD", AwayTeam = "TBD", Competition = "playoff", Round = "semifinal", GameNumber = 6 },
                 new() { Date = new DateTime(2025, 10, 5, 13, 0, 0), Field = "Heritage Green #4", HomeTeam = "TBD", AwayTeam = "TBD", Competition = "playoff", Round = "final", GameNumber = 7 }
