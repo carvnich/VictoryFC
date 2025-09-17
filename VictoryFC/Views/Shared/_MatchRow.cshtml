@@ -1,10 +1,10 @@
 ﻿@model VictoryFC.Models.Match
 
 <div class="row align-items-center p-1 p-md-2 m-1 m-md-2 rounded match-row @Model.CompetitionClass">
-	<div class="col-4 col-md-4 text-end">
+	<div class="col-4 col-md-3 text-end">
 		<span class="@((Model.HomeTeam == "Victory FC") ? "text-vfc-red" : "")">@Model.HomeTeam</span>
 	</div>
-	<div class="col-4 col-md-4 text-center">
+	<div class="col-4 col-md-6 text-center">
 		@if (Model.IsCompleted)
 		{
 			<div class="d-flex align-items-center justify-content-center">
@@ -26,7 +26,16 @@
 			</div>
 		}
 	</div>
-	<div class="col-4 col-md-4">
+	<div class="col-4 col-md-2">
 		<span class="@((Model.AwayTeam == "Victory FC") ? "text-vfc-red" : "")">@Model.AwayTeam</span>
 	</div>
+
+	@if (ViewData["ShowEditButtons"] != null && (bool)ViewData["ShowEditButtons"])
+	{
+		<div class="col-md-1 d-none d-md-flex justify-content-end">
+			<button class="btn btn-outline-secondary match-edit-btn" style="display: none;" onclick="editMatch(@Model.Id)">
+				<i class="bi bi-pencil"></i>
+			</button>
+		</div>
+	}
 </div>

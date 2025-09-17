@@ -1,6 +1,17 @@
 ﻿// Global variables
 let map;
 
+function navigateToSection(sectionId, event) {
+    // Check if we're on the home page
+    if (window.location.pathname === '/') {
+        // On home page - prevent default and scroll to section
+        event.preventDefault();
+        scrollToSection(sectionId);
+    }
+    // If not on home page, let the default href behavior handle navigation to home page with hash
+    // The browser will automatically scroll to the section after navigation
+}
+
 function scrollToSection(sectionId) {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -125,9 +136,162 @@ async function switchCompetition() {
     const victoryHtml = await victoryResponse.text();
     const victoryTab = document.getElementById('victory-matches');
     if (victoryTab) victoryTab.innerHTML = victoryHtml;
+}
 
-    // Re-initialize collapse functionality
-    initializeMatchesCollapse();
+async function switchCompetitionMatches() {
+    const select = document.getElementById('competition-select');
+    if (!select) return;
+
+    // Update all matches tab
+    const allResponse = await fetch(`/Match/GetMatchesPartial?competition=${select.value}`);
+    const allHtml = await allResponse.text();
+    const allTab = document.getElementById('all-matches');
+    if (allTab) allTab.innerHTML = allHtml;
+
+    // Update Victory FC matches tab
+    const victoryResponse = await fetch(`/Match/GetMatchesPartial?competition=${select.value}&filter=victory`);
+    const victoryHtml = await victoryResponse.text();
+    const victoryTab = document.getElementById('victory-matches');
+    if (victoryTab) victoryTab.innerHTML = victoryHtml;
+
+    // Re-apply edit mode visibility
+    const editToggle = document.getElementById('editModeToggle');
+    if (editToggle?.checked) {
+        const editButtons = document.querySelectorAll('.match-edit-btn');
+        editButtons.forEach(btn => btn.style.display = 'block');
+    }
+}
+
+function populateMatchesCarousel(allMatches) {
+    const carouselInner = document.getElementById('matches-carousel-inner');
+    const carouselIndicators = document.getElementById('matches-carousel-indicators');
+    const navButtons = document.querySelectorAll('.carousel-nav-btn');
+
+    if (!carouselInner) return;
+
+    const today = new Date();
+
+    // Group matches by date
+    const matchesByDate = allMatches.reduce((acc, match) => {
+        const matchDate = new Date(match.date);
+        const dateKey = matchDate.toDateString();
+        if (!acc[dateKey]) acc[dateKey] = [];
+        acc[dateKey].push(match);
+        return acc;
+    }, {});
+
+    // Get all match dates (both upcoming and past) and sort them
+    const allDates = Object.keys(matchesByDate)
+        .map(date => new Date(date))
+        .sort((a, b) => a - b);
+
+    if (allDates.length === 0) {
+        carouselInner.innerHTML = '<div class="carousel-item active"><div class="text-center p-4"><h5>No matches available</h5></div></div>';
+        return;
+    }
+
+    // Find the next upcoming match date or today's matches
+    let activeIndex = 0;
+    const now = new Date();
+    for (let i = 0; i < allDates.length; i++) {
+        const dateMatches = matchesByDate[allDates[i].toDateString()];
+        // Check if this date has upcoming matches or is today
+        if (allDates[i] >= today || dateMatches.some(m => !m.isCompleted)) {
+            activeIndex = i;
+            break;
+        }
+        // If no upcoming matches found, show the last date
+        if (i === allDates.length - 1) {
+            activeIndex = i;
+        }
+    }
+
+    // Create indicators
+    if (carouselIndicators) {
+        carouselIndicators.innerHTML = '';
+        allDates.forEach((date, index) => {
+            const indicator = document.createElement('button');
+            indicator.type = 'button';
+            indicator.setAttribute('data-bs-target', '#matchesCarousel');
+            indicator.setAttribute('data-bs-slide-to', index.toString());
+            indicator.className = index === activeIndex ? 'active' : '';
+            indicator.setAttribute('aria-label', `Slide ${index + 1}`);
+            if (index === activeIndex) {
+                indicator.setAttribute('aria-current', 'true');
+            }
+            carouselIndicators.appendChild(indicator);
+        });
+    }
+
+    // Update navigation button states
+    function updateNavButtons(currentIndex) {
+        navButtons.forEach((btn, i) => {
+            if (i === 0) { // Previous button
+                btn.disabled = currentIndex === 0;
+            } else { // Next button
+                btn.disabled = currentIndex === allDates.length - 1;
+            }
+        });
+    }
+
+    allDates.forEach((date, index) => {
+        const matches = matchesByDate[date.toDateString()].sort((a, b) => new Date(a.date) - new Date(b.date));
+        const isActive = index === activeIndex ? 'active' : '';
+
+        const carouselItem = document.createElement('div');
+        carouselItem.className = `carousel-item ${isActive}`;
+
+        const matchesHtml = matches.map(match => `
+            <div class="row align-items-center p-2 m-2 rounded match-row ${match.competitionClass}">
+                <div class="col-4 text-end">
+                    <span class="${match.homeTeam === 'Victory FC' ? 'text-vfc-red' : ''}">${match.homeTeam}</span>
+                </div>
+                <div class="col-4 text-center">
+                    ${match.isCompleted ?
+                `<div class="d-flex align-items-center justify-content-center">
+                            <span class="fs-4 me-2">${match.homeScore}</span>
+                            <span class="text-muted">-</span>
+                            <span class="fs-4 ms-2">${match.awayScore}</span>
+                        </div>` :
+                '<div class="mb-0">vs</div>'
+            }
+                    <div class="small text-muted">
+                        <div>${match.formattedTime}</div>
+                        <div class="d-none d-md-block">${match.field}</div>
+                        <div class="d-md-none small">${match.field}</div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <span class="${match.awayTeam === 'Victory FC' ? 'text-vfc-red' : ''}">${match.awayTeam}</span>
+                </div>
+            </div>
+        `).join('');
+
+        carouselItem.innerHTML = `
+            <div class="text-center mb-3">
+                <h5 class="mb-0">${date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h5>
+            </div>
+            ${matchesHtml}
+        `;
+
+        carouselInner.appendChild(carouselItem);
+    });
+
+    // Initial button state
+    updateNavButtons(activeIndex);
+
+    // Listen for carousel slide events to update button states
+    const carousel = document.getElementById('matchesCarousel');
+    if (carousel) {
+        carousel.addEventListener('slid.bs.carousel', (event) => {
+            updateNavButtons(event.to);
+        });
+    }
+}
+
+function editMatch(matchId) {
+    // Placeholder function for future CRUD operations
+    alert(`Edit match ${matchId} - CRUD functionality coming soon!`);
 }
 
 function initializeTooltips() {
@@ -176,27 +340,16 @@ function initializeScorersCollapse() {
     }
 }
 
-function initializeMatchesCollapse() {
-    const matchesIcons = document.querySelectorAll('.matches-expand-icon');
-    const matchesTexts = document.querySelectorAll('.matches-expand-text');
-
-    matchesIcons.forEach((icon, index) => {
-        const targetId = icon.getAttribute('data-bs-target') || '#matches-collapse';
-        const matchesCollapse = document.querySelector(targetId);
-        const matchesText = matchesTexts[index];
-
-        if (matchesCollapse) {
-            matchesCollapse.addEventListener('show.bs.collapse', () => {
-                icon.className = 'bi bi-chevron-up text-muted matches-expand-icon';
-                if (matchesText) matchesText.textContent = 'Show Less';
+function initializeEditMode() {
+    const editToggle = document.getElementById('editModeToggle');
+    if (editToggle) {
+        editToggle.addEventListener('change', function () {
+            const editButtons = document.querySelectorAll('.match-edit-btn');
+            editButtons.forEach(btn => {
+                btn.style.display = this.checked ? 'block' : 'none';
             });
-
-            matchesCollapse.addEventListener('hide.bs.collapse', () => {
-                icon.className = 'bi bi-chevron-down text-muted matches-expand-icon';
-                if (matchesText) matchesText.textContent = 'Show More';
-            });
-        }
-    });
+        });
+    }
 }
 
 function createScrollToTopButton() {
@@ -227,11 +380,23 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeTooltips();
     initializeStandingsExpansion();
     initializeScorersCollapse();
-    initializeMatchesCollapse();
+    initializeEditMode();
     createScrollToTopButton();
 
-    // Attach dropdown event listeners
+    // Attach dropdown event listeners for home page
     document.getElementById('division-select')?.addEventListener('change', switchDivision);
     document.getElementById('scorers-select')?.addEventListener('change', switchScorers);
-    document.getElementById('competition-select')?.addEventListener('change', switchCompetition);
+
+    // Check if we're on home page or matches page for competition dropdown
+    const currentPath = window.location.pathname.toLowerCase();
+    if (currentPath === '/' || currentPath.includes('/home')) {
+        document.getElementById('competition-select')?.addEventListener('change', switchCompetition);
+    } else if (currentPath.includes('/match')) {
+        document.getElementById('competition-select')?.addEventListener('change', switchCompetitionMatches);
+    }
+
+    // Initialize carousel on home page
+    if (window.matchesData && document.getElementById('matches-carousel-inner')) {
+        populateMatchesCarousel(window.matchesData);
+    }
 });

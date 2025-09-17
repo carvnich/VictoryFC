@@ -96,7 +96,7 @@ body {
         padding: 0 0.75rem;
     }
 
-    .table-responsive, 
+    .table-responsive,
     .match-row {
         font-size: 0.875rem;
     }
@@ -111,14 +111,6 @@ body {
     background-color: rgba(0,0,0,0.02);
 }
 
-.shop-item-card {
-    transition: transform 0.2s ease;
-}
-
-    .shop-item-card:hover {
-        transform: translateY(-2px);
-    }
-
 .btn-scroll-top {
     position: fixed !important;
     bottom: 20px !important;
@@ -128,3 +120,70 @@ body {
     z-index: 1000 !important;
     transition: opacity 0.3s ease !important;
 }
+
+.vfc-button {
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #6c757d;
+}
+
+.carousel-nav-btn {
+    height: 3rem;
+    width: 3rem;
+    color: #6c757d;
+    border: 1px solid #ced4da;
+    border-radius: 25%;
+    background-color: #ffffff;
+}
+
+.carousel-indicators [data-bs-target] {
+    background-color: #6c757d;
+}
+
+    .carousel-indicators [data-bs-target].active {
+        background-color: #df2c30;
+    }
+
+@media (max-width: 767.98px) {
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 8%;
+    }
+
+    .carousel-control-custom {
+        min-width: 35px;
+        font-size: 0.875rem;
+    }
+}
+
+.match-edit-btn {
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+    .match-edit-btn:hover {
+        opacity: 1;
+    }
+
+.form-switch .form-check-input#editModeToggle {
+    width: 2rem !important;
+    height: 1rem !important;
+    background-color: #e9ecef !important;
+    border-color: #ced4da !important;
+    transition: all 0.2s ease !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
+}
+
+    .form-switch .form-check-input#editModeToggle:checked {
+        background-color: #df2c30 !important;
+        border-color: #df2c30 !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e") !important;
+    }
+
+    .form-switch .form-check-input#editModeToggle:focus {
+        border-color: none !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }

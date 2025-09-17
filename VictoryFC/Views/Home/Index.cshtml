@@ -73,7 +73,7 @@
 	<div id="standings" class="card-body">
 		<div class="row align-items-center mb-3">
 			<div class="col-md-6">
-				<h3 class="mb-2 mb-md-0"><i class="bi bi-table me-2"></i>Standings</h3>
+				<h3 class="mb-2 mb-md-0">Standings</h3>
 			</div>
 			<div class="col-md-6">
 				<div class="d-flex justify-content-md-end">
@@ -93,7 +93,7 @@
 	<div id="scorers" class="card-body">
 		<div class="row align-items-center mb-3">
 			<div class="col-md-6">
-				<h3 class="mb-2 mb-md-0"><i class="bi bi-trophy-fill me-2"></i>Top Scorers</h3>
+				<h3 class="mb-2 mb-md-0">Scorers</h3>
 			</div>
 			<div class="col-md-6">
 				<div class="d-flex justify-content-md-end">
@@ -109,50 +109,31 @@
 
 	<hr class="mx-auto rounded" style="width: 90%; height: 4px; background-color: #6c757d; border: none;">
 
-	<!-- Matches Section -->
+	<!-- Matches Carousel Section -->
 	<div id="matches" class="card-body">
-		<div class="row align-items-center mb-3">
-			<div class="col-md-6">
-				<h3 class="mb-2 mb-md-0"><i class="bi bi-calendar-event me-2"></i>Matches</h3>
+		<div class="d-flex align-items-center px-3 mb-3">
+			<button class="carousel-nav-btn" type="button" data-bs-target="#matchesCarousel" data-bs-slide="prev">
+				<i class="bi bi-chevron-left"></i>
+			</button>
+			<h3 class="mb-0 text-center flex-grow-1">Matches</h3>
+			<button class="carousel-nav-btn" type="button" data-bs-target="#matchesCarousel" data-bs-slide="next">
+				<i class="bi bi-chevron-right"></i>
+			</button>
+		</div>
+
+		<div id="matchesCarousel" class="carousel slide" data-bs-ride="false">
+			<div class="carousel-inner" id="matches-carousel-inner">
+				<!-- Carousel items will be populated by JavaScript -->
 			</div>
-			<div class="col-md-6">
-				<div class="d-flex justify-content-md-end">
-					<select class="form-select w-auto" id="competition-select">
-						<option value="all" selected>All Competitions</option>
-						<option value="regular">Division 3</option>
-						<option value="spence">Spence Cup</option>
-					</select>
-				</div>
+			<div class="carousel-indicators position-relative" id="matches-carousel-indicators">
+				<!-- Indicators will be populated by JavaScript -->
 			</div>
 		</div>
 
-		<ul class="nav nav-pills mb-4" role="tablist">
-			<li class="nav-item">
-				<button class="nav-link text-black active" data-bs-toggle="pill" data-bs-target="#all-matches">
-					<i class="bi bi-list-ul me-1 d-none d-sm-inline"></i>All Matches
-				</button>
-			</li>
-			<li class="nav-item">
-				<button class="nav-link text-black" data-bs-toggle="pill" data-bs-target="#victory-matches">
-					<i class="bi bi-trophy me-1 d-none d-sm-inline"></i>Victory FC
-				</button>
-			</li>
-		</ul>
-
-		<div class="tab-content">
-			<div class="tab-pane fade show active" id="all-matches">
-				@{
-					var allMatches = Model.AllMatches.OrderByDescending(m => m.Date).GroupBy(m => m.Date.Date).OrderByDescending(g => g.Key);
-				}
-				@Html.Partial("_MatchesList", allMatches)
-			</div>
-
-			<div class="tab-pane fade" id="victory-matches">
-				@{
-					var victoryMatches = Model.VictoryMatches.OrderByDescending(m => m.Date).GroupBy(m => m.Date.Date).OrderByDescending(g => g.Key);
-				}
-				@Html.Partial("_MatchesList", victoryMatches)
-			</div>
+		<div class="text-center py-3 mt-2">
+			<a asp-controller="Match" asp-action="Index" class="vfc-button">
+				View All Matches
+			</a>
 		</div>
 	</div>
 
@@ -184,3 +165,8 @@
 		</div>
 	</div>
 </div>
+
+<script>
+	// Pass matches data to global scope for carousel
+	window.matchesData = @Html.Raw(Json.Serialize(Model.AllMatches));
+</script>

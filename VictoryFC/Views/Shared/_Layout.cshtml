@@ -28,35 +28,35 @@
 				<div class="collapse navbar-collapse" id="navbarNav">
 					<ul class="navbar-nav mx-auto">
 						<li class="nav-item">
-							<a class="nav-link text-dark fw-medium px-2 px-lg-3" href="#hero" onclick="scrollToSection('hero')">
+							<a class="nav-link text-dark fw-medium px-2 px-lg-3" asp-controller="Home" asp-action="Index">
 								<i class="bi bi-house-door d-lg-none me-1"></i>
 								<span class="d-none d-lg-inline">Home</span>
 								<span class="d-lg-none">Home</span>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-dark fw-medium px-2 px-lg-3" href="#standings" onclick="scrollToSection('standings')">
+							<a class="nav-link text-dark fw-medium px-2 px-lg-3" href="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "#standings" : "/#standings")" onclick="navigateToSection('standings', event)">
 								<i class="bi bi-table d-lg-none me-1"></i>
 								<span class="d-none d-lg-inline">Standings</span>
 								<span class="d-lg-none">Standings</span>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-dark fw-medium px-2 px-lg-3" href="#scorers" onclick="scrollToSection('scorers')">
+							<a class="nav-link text-dark fw-medium px-2 px-lg-3" href="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "#scorers" : "/#scorers")" onclick="navigateToSection('scorers', event)">
 								<i class="bi bi-trophy-fill d-lg-none me-1"></i>
 								<span class="d-none d-lg-inline">Scorers</span>
 								<span class="d-lg-none">Scorers</span>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-dark fw-medium px-2 px-lg-3" href="#matches" onclick="scrollToSection('matches')">
+							<a class="nav-link text-dark fw-medium px-2 px-lg-3" href="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "#matches" : "/#matches")" onclick="navigateToSection('matches', event)">
 								<i class="bi bi-calendar-event d-lg-none me-1"></i>
 								<span class="d-none d-lg-inline">Matches</span>
 								<span class="d-lg-none">Matches</span>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-dark fw-medium px-2 px-lg-3" href="#shop" onclick="scrollToSection('shop')">
+							<a class="nav-link text-dark fw-medium px-2 px-lg-3" href="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "#shop" : "/#shop")" onclick="navigateToSection('shop', event)">
 								<i class="bi bi-bag d-lg-none me-1"></i>
 								<span class="d-none d-lg-inline">Shop</span>
 								<span class="d-lg-none">Shop</span>

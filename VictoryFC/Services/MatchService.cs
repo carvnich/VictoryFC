@@ -9,19 +9,14 @@ namespace VictoryFC.Services
         private readonly ApplicationDbContext _context;
         private const string TeamName = "Victory FC";
 
-        // Field locations dictionary
+        // Field locations Dictionary
         private static readonly Dictionary<string, string> FieldLocations = new()
         {
-            ["Heritage Green 5"] = "355 First Rd W, Stoney Creek, ON L8E 0G5",
-            ["Heritage Green #5"] = "355 First Rd W, Stoney Creek, ON L8E 0G5",
-            ["Heritage Green #2"] = "355 First Rd W, Stoney Creek, ON L8E 0G5",
-            ["Heritage Green #4"] = "355 First Rd W, Stoney Creek, ON L8E 0G5",
-            ["Mohawk 2"] = "135 Fennell Ave W, Hamilton, ON L9C 1E9",
-            ["Mohawk 5"] = "135 Fennell Ave W, Hamilton, ON L9C 1E9",
-            ["Mohawk 6"] = "135 Fennell Ave W, Hamilton, ON L9C 1E9",
+            ["Heritage Green"] = "355 First Rd W, Stoney Creek, ON L8E 0G5",
+            ["Mohawk"] = "135 Fennell Ave W, Hamilton, ON L9C 1E9",
             ["Hamilton Italian Centre"] = "1145 Stone Church Rd E, Hamilton, ON L8W 3J6",
-            ["Shady Acres 1"] = "1500 Shaver Rd, Ancaster, ON L9G 3K9",
-            ["Ancaster 3-A"] = "363 Wilson St E, Ancaster, ON L9G 2B8",
+            ["Shady Acres"] = "1500 Shaver Rd, Ancaster, ON L9G 3K9",
+            ["Ancaster"] = "363 Wilson St E, Ancaster, ON L9G 2B8",
             ["Proto Field"] = "65 Herkimer St, Hamilton, ON L8P 2G5",
             ["Sackville"] = "316 Sackville Hill Lane, Lower Sackville, NS B4C 2R9"
         };
@@ -145,8 +140,23 @@ namespace VictoryFC.Services
             await _context.SaveChangesAsync();
         }
 
-        public string GetLocationAddress(string? field) =>
-            field != null && FieldLocations.TryGetValue(field, out var address) ? address : FieldLocations["Heritage Green 5"];
+        public string GetLocationAddress(string? field)
+        {
+            if (string.IsNullOrWhiteSpace(field))
+                return FieldLocations["Heritage Green"];
+
+            var fieldLower = field.ToLowerInvariant();
+
+            if (fieldLower.Contains("heritage green")) return FieldLocations["Heritage Green"];
+            if (fieldLower.Contains("mohawk")) return FieldLocations["Mohawk"];
+            if (fieldLower.Contains("italian centre")) return FieldLocations["Hamilton Italian Centre"];
+            if (fieldLower.Contains("shady acres")) return FieldLocations["Shady Acres"];
+            if (fieldLower.Contains("ancaster")) return FieldLocations["Ancaster"];
+            if (fieldLower.Contains("proto")) return FieldLocations["Proto Field"];
+            if (fieldLower.Contains("sackville")) return FieldLocations["Sackville"];
+
+            return FieldLocations["Heritage Green"]; // Default
+        }
 
         private bool IsWin(Match m) => (m.HomeTeam == TeamName && m.HomeScore > m.AwayScore) || (m.AwayTeam == TeamName && m.AwayScore > m.HomeScore);
         private bool IsDraw(Match m) => m.HomeScore == m.AwayScore;
